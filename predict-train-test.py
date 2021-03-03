@@ -3,17 +3,17 @@
 # Script modified from tutorial here: https://www.thepythoncode.com/article/stock-price-prediction-in-python-using-tensorflow-2-and-keras
 # 2021-02-26
 
-setup(
-    name='predict-train-test',
-    version='0.1.0',
-    description='Predict/train/test sctipt for PyStockAI',
-    long_description=readme,
-    author='Lela Andrews',
-    author_email='lelavioletandrews@gmail.com',
-    url='https://github.com/lvandrews',
-    license=license,
-    packages=find_packages(exclude=('tests', 'docs'))
-)
+#setup(
+#    name='predict-train-test',
+#    version='0.1.0',
+#    description='Predict/train/test sctipt for PyStockAI',
+#    long_description=readme,
+#    author='Lela Andrews',
+#    author_email='lelavioletandrews@gmail.com',
+#    url='https://github.com/lvandrews',
+#    license=license,
+#    packages=find_packages(exclude=('tests', 'docs'))
+#)
 
 # Parse inputs or provide help
 import argparse, sys
