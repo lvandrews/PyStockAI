@@ -58,7 +58,10 @@ print("Lookup step:", args.lookup_step)
 print("RNN cell: LSTM")
 
 # PREDICTING THE MODEL
-# Import libraries
+# Import libraries and silence annoying tensorflow messages
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Bidirectional
@@ -68,7 +71,6 @@ from sklearn.model_selection import train_test_split
 from yahoo_fin import stock_info as si
 from collections import deque
 
-import os
 import numpy as np
 import pandas as pd
 import random
