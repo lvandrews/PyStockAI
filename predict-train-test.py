@@ -23,34 +23,41 @@ desctext = 'predict-train-test.py: use Tensorflow2 to model stock performance an
 
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
-parser.add_argument("-v", "--version", help="show program version", action="store_true")
+
+parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar='', required=True)
+parser.add_argument("-e", "--epoch", help="Epochs to train (integer, default = 5)", type=int, metavar='', default="5")
+parser.add_argument("-s", "--test_size", help="Test ratio size, 0.2 is 20%% (decimal, default = 0.2)", type=float, metavar='', default="0.2")
+parser.add_argument("-w", "--window_size", help="Window length used to predict (integer, default = 50)", type=int, metavar='', default="50")
+parser.add_argument("-l", "--lookup_step", help="Lookup step, 1 is the next day (integer, default = 1)", type=int, metavar='', default="1")
+
+parser.add_argument("-v", "--version", help="show program version", action="version", version="%(prog)s 0.1")
 parser.add_argument("-V", "--verbose", help="increase output verbosity", action="store_true")
-parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN)", type=str, metavar='')
-parser.add_argument("-e", "--epoch", help="Epochs to train (integer value)", type=int, metavar='')
+
+
+# Print help if no arguments supplied
+if len(sys.argv) < 2:
+    parser.print_help()
+    sys.exit(1)
 
 # Read arguments from the command line
 args = parser.parse_args()
-
-# Check for --version or -v
-if args.version:
-    print("predict-train-test.py version 0.1")
-    exit()
-
+    
+# Provide useful feedback
+args = parser.parse_args()
 if args.verbose:
     print("Verbosity turned on")
-
-if args.ticker:
-    print("Ticker symbol:", args.epoch)
-
-if args.epoch:
-    print("Epochs to train:", args.epoch)
     
 parser.parse_args()
 
 # Print important model parameters
+print("Ticker symbol:", args.ticker)
+print("Epochs to train:", args.epoch)
+print("Test size:", args.test_size)
+print("Window size:", args.window_size)
+print("Lookup step:", args.lookup_step)
 print("RNN cell: LSTM")
 
-# BEGIN PREDICTION HERE
+# PREDICTING THE MODEL
 # Import libraries
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
@@ -81,13 +88,14 @@ def shuffle_in_unison(a, b):
     np.random.set_state(state)
     np.random.shuffle(b)
 
-def load_data(ticker, n_steps=50, scale=True, shuffle=True, lookup_step=1, split_by_date=True,
-                test_size=0.2, feature_columns=['adjclose', 'volume', 'open', 'high', 'low']):
+# Need to figure out how "ticker" is operating in below code
+def load_data(ticker, window_size=args.window_size, scale=True, shuffle=True, lookup_step=args.lookup_step, split_by_date=True,
+                test_size=args.test_size, feature_columns=['adjclose', 'volume', 'open', 'high', 'low']):
     """
     Loads data from Yahoo Finance source, as well as scaling, shuffling, normalizing and splitting.
     Params:
         ticker (str/pd.DataFrame): the ticker you want to load, examples include AAPL, TESL, etc.
-        n_steps (int): the historical sequence length (i.e window size) used to predict, default is 50
+        window_size (int): the historical sequence length (i.e window size) used to predict, default is 50
         scale (bool): whether to scale prices from 0 to 1, default is True
         shuffle (bool): whether to shuffle the dataset (both training & testing), default is True
         lookup_step (int): the future lookup step to predict, default is 1 (e.g next day)
@@ -132,13 +140,13 @@ def load_data(ticker, n_steps=50, scale=True, shuffle=True, lookup_step=1, split
     # drop NaNs
     df.dropna(inplace=True)
     sequence_data = []
-    sequences = deque(maxlen=n_steps)
+    sequences = deque(maxlen=window_size)
     for entry, target in zip(df[feature_columns + ["date"]].values, df['future'].values):
         sequences.append(entry)
-        if len(sequences) == n_steps:
+        if len(sequences) == window_size:
             sequence_data.append([np.array(sequences), target])
-    # get the last sequence by appending the last `n_step` sequence with `lookup_step` sequence
-    # for instance, if n_steps=50 and lookup_step=10, last_sequence should be of 60 (that is 50+10) length
+    # get the last sequence by appending the last `window_size` sequence with `lookup_step` sequence
+    # for instance, if window_size=50 and lookup_step=10, last_sequence should be of 60 (that is 50+10) length
     # this last_sequence will be used to predict future stock prices that are not available in the dataset
     last_sequence = list([s[:len(feature_columns)] for s in sequences]) + list(last_sequence)
     last_sequence = np.array(last_sequence).astype(np.float32)
@@ -207,42 +215,51 @@ def create_model(sequence_length, n_features, units=256, cell=LSTM, n_layers=2, 
     model.compile(loss=loss, metrics=["mean_absolute_error"], optimizer=optimizer)
     return model
 
-#
-# Script from tutorial here: https://www.thepythoncode.com/article/stock-price-prediction-in-python-using-tensorflow-2-and-keras
-# 2021-02-26
-# Training the model
-
+# TRAINING THE MODEL
 
 # Window size or the sequence length
-N_STEPS = 100
+WINDOW_SIZE = args.window_size
+
 # Lookup step, 1 is the next day
-LOOKUP_STEP = 1
+LOOKUP_STEP = args.lookup_step
+
 # whether to scale feature columns & output price as well
 SCALE = True
 scale_str = f"sc-{int(SCALE)}"
+
 # whether to shuffle the dataset
 SHUFFLE = True
 shuffle_str = f"sh-{int(SHUFFLE)}"
+
 # whether to split the training/testing set by date
 SPLIT_BY_DATE = False
 split_by_date_str = f"sbd-{int(SPLIT_BY_DATE)}"
+
 # test ratio size, 0.2 is 20%
-TEST_SIZE = 0.5
+TEST_SIZE = args.test_size
+
 # features to use
 FEATURE_COLUMNS = ["adjclose", "volume", "open", "high", "low"]
+
 # date now
 date_now = time.strftime("%Y-%m-%d_%H-%M-%S")
 dt_string = time.strftime("%b-%d-%Y %I:%M:%S %p")
+
 ### model parameters
 N_LAYERS = 2
+
 # LSTM cell
 CELL = LSTM
+
 # 256 LSTM neurons
 UNITS = 256
+
 # 40% dropout
 DROPOUT = 0.4
+
 # whether to use bidirectional RNNs
 BIDIRECTIONAL = False
+
 ### training parameters
 # mean absolute error loss
 # LOSS = "mae"
@@ -251,12 +268,14 @@ LOSS = "huber_loss"
 OPTIMIZER = "adam"
 BATCH_SIZE = 64
 EPOCHS = args.epoch
+
 # TICKER TO TEST
 ticker = args.ticker
 ticker_data_filename = os.path.join("data", f"{ticker}_{date_now}.csv")
+
 # model name to save, making it as unique as possible based on parameters
 model_name = f"{date_now}_{ticker}-{shuffle_str}-{scale_str}-{split_by_date_str}-\
-{LOSS}-{OPTIMIZER}-{CELL.__name__}-seq-{N_STEPS}-step-{LOOKUP_STEP}-layers-{N_LAYERS}-units-{UNITS}"
+{LOSS}-{OPTIMIZER}-{CELL.__name__}-seq-{WINDOW_SIZE}-step-{LOOKUP_STEP}-layers-{N_LAYERS}-units-{UNITS}"
 if BIDIRECTIONAL:
     model_name += "-b"
 
@@ -269,17 +288,21 @@ if not os.path.isdir("data"):
     os.mkdir("data")
     
 # load the data
-data = load_data(ticker, N_STEPS, scale=SCALE, split_by_date=SPLIT_BY_DATE, 
+data = load_data(ticker, WINDOW_SIZE, scale=SCALE, split_by_date=SPLIT_BY_DATE, 
                 shuffle=SHUFFLE, lookup_step=LOOKUP_STEP, test_size=TEST_SIZE, 
                 feature_columns=FEATURE_COLUMNS)
+                
 # save the dataframe
 data["df"].to_csv(ticker_data_filename)
+
 # construct the model
-model = create_model(N_STEPS, len(FEATURE_COLUMNS), loss=LOSS, units=UNITS, cell=CELL, n_layers=N_LAYERS,
+model = create_model(WINDOW_SIZE, len(FEATURE_COLUMNS), loss=LOSS, units=UNITS, cell=CELL, n_layers=N_LAYERS,
                     dropout=DROPOUT, optimizer=OPTIMIZER, bidirectional=BIDIRECTIONAL)
+                    
 # some tensorflow callbacks
 checkpointer = ModelCheckpoint(os.path.join("results", model_name + ".h5"), save_weights_only=True, save_best_only=True, verbose=1)
 tensorboard = TensorBoard(log_dir=os.path.join("logs", model_name))
+
 # train the model and save the weights whenever we see 
 # a new optimal model using ModelCheckpoint
 history = model.fit(data["X_train"], data["y_train"],
@@ -291,10 +314,7 @@ history = model.fit(data["X_train"], data["y_train"],
     
 # tensorboard --logdir="logs"
     
-#
-# Script from tutorial here: https://www.thepythoncode.com/article/stock-price-prediction-in-python-using-tensorflow-2-and-keras
-# 2021-02-26
-# Testing the model
+# TESTING THE MODEL
 
 def plot_graph(test_df):
     """
@@ -354,7 +374,7 @@ def get_final_df(model, data):
     
 def predict(model, data):
     # retrieve the last sequence from data
-    last_sequence = data["last_sequence"][-N_STEPS:]
+    last_sequence = data["last_sequence"][-WINDOW_SIZE:]
     # expand dimension
     last_sequence = np.expand_dims(last_sequence, axis=0)
     # get the prediction (scaled from 0 to 1)
