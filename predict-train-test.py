@@ -49,8 +49,11 @@ if args.verbose:
     
 parser.parse_args()
 
+# Set ticker symbol to uppercase if lowercase was entered
+ticker = args.ticker.upper()
+
 # Print important model parameters
-print("Ticker symbol:", args.ticker)
+print("Ticker symbol:", ticker)
 print("Epochs to train:", args.epoch)
 print("Test size:", args.test_size)
 print("Window size:", args.window_size)
@@ -77,6 +80,29 @@ import random
 import time
 import matplotlib.pyplot as plt
 
+# Create these folders if they does not exist (including ticker-specific subdirectories within results, data and logs)
+outdir_results = os.path.join("results", ticker)
+outdir_logs = os.path.join("logs", ticker)
+outdir_data = os.path.join("data", ticker)
+if not os.path.isdir("results"):
+    os.mkdir("results")
+if not os.path.isdir(outdir_results):
+    os.mkdir(outdir_results)
+if not os.path.isdir("logs"):
+    os.mkdir("logs")
+if not os.path.isdir(outdir_logs):
+    os.mkdir(outdir_logs)
+if not os.path.isdir("data"):
+    os.mkdir("data")
+if not os.path.isdir(outdir_data):
+    os.mkdir(outdir_data)
+
+# Date strings
+# date now
+date_now = time.strftime("%Y-%m-%d_%H-%M-%S")
+date_now_notime = time.strftime("%Y-%m-%d")
+dt_string = time.strftime("%b-%d-%Y %I:%M:%S %p")
+
 # Set seed, so we can get the same results after rerunning several times
 np.random.seed(314)
 tf.random.set_seed(314)
@@ -89,6 +115,9 @@ def shuffle_in_unison(a, b):
     np.random.shuffle(a)
     np.random.set_state(state)
     np.random.shuffle(b)
+
+# Ticker data filename (yahoo finance)
+ticker_data_filename = os.path.join(outdir_data, f"{ticker}_{date_now_notime}.csv")
 
 # Need to figure out how "ticker" is operating in below code
 def load_data(ticker, window_size=args.window_size, scale=True, shuffle=True, lookup_step=args.lookup_step, split_by_date=True,
@@ -243,10 +272,6 @@ TEST_SIZE = args.test_size
 # features to use
 FEATURE_COLUMNS = ["adjclose", "volume", "open", "high", "low"]
 
-# date now
-date_now = time.strftime("%Y-%m-%d_%H-%M-%S")
-dt_string = time.strftime("%b-%d-%Y %I:%M:%S %p")
-
 ### model parameters
 N_LAYERS = 2
 
@@ -272,8 +297,8 @@ BATCH_SIZE = 64
 EPOCHS = args.epoch
 
 # TICKER TO TEST
-ticker = args.ticker
-ticker_data_filename = os.path.join("data", f"{ticker}_{date_now}.csv")
+#ticker = ticker
+
 
 # model name to save, making it as unique as possible based on parameters
 model_name = f"{date_now}_{ticker}-{shuffle_str}-{scale_str}-{split_by_date_str}-\
@@ -281,14 +306,9 @@ model_name = f"{date_now}_{ticker}-{shuffle_str}-{scale_str}-{split_by_date_str}
 if BIDIRECTIONAL:
     model_name += "-b"
 
-# create these folders if they does not exist
-if not os.path.isdir("results"):
-    os.mkdir("results")
-if not os.path.isdir("logs"):
-    os.mkdir("logs")
-if not os.path.isdir("data"):
-    os.mkdir("data")
-    
+# Redirect data output
+ticker_data_filename = os.path.join(outdir_data, f"{ticker}_{date_now_notime}.csv")
+
 # load the data
 data = load_data(ticker, WINDOW_SIZE, scale=SCALE, split_by_date=SPLIT_BY_DATE, 
                 shuffle=SHUFFLE, lookup_step=LOOKUP_STEP, test_size=TEST_SIZE, 
@@ -302,8 +322,8 @@ model = create_model(WINDOW_SIZE, len(FEATURE_COLUMNS), loss=LOSS, units=UNITS, 
                     dropout=DROPOUT, optimizer=OPTIMIZER, bidirectional=BIDIRECTIONAL)
                     
 # some tensorflow callbacks
-checkpointer = ModelCheckpoint(os.path.join("results", model_name + ".h5"), save_weights_only=True, save_best_only=True, verbose=1)
-tensorboard = TensorBoard(log_dir=os.path.join("logs", model_name))
+checkpointer = ModelCheckpoint(os.path.join(outdir_results, model_name + ".h5"), save_weights_only=True, save_best_only=True, verbose=0)
+tensorboard = TensorBoard(log_dir=os.path.join(outdir_logs, model_name))
 
 # train the model and save the weights whenever we see 
 # a new optimal model using ModelCheckpoint
@@ -325,7 +345,7 @@ def plot_graph(test_df):
     """
     plt.plot(test_df[f'true_adjclose_{LOOKUP_STEP}'], c='b')
     plt.plot(test_df[f'adjclose_{LOOKUP_STEP}'], c='r')
-    plt.title(args.ticker)
+    plt.title(ticker)
     plt.xlabel("Date")
     plt.ylabel("Price ($)")
     plt.legend(["Actual Price", "Predicted Price"])
@@ -389,7 +409,7 @@ def predict(model, data):
     return predicted_price
     
 # load optimal model weights from results folder
-model_path = os.path.join("results", model_name) + ".h5"
+model_path = os.path.join(outdir_results, model_name) + ".h5"
 model.load_weights(model_path)
 
 # evaluate the model
