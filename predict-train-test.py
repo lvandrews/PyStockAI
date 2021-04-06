@@ -6,7 +6,7 @@
 #setup(
 #    name='predict-train-test',
 #    version='0.1.0',
-#    description='Predict/train/test sctipt for PyStockAI',
+#    description='Predict/train/test script for PyStockAI',
 #    long_description=readme,
 #    author='Lela Andrews',
 #    author_email='lelavioletandrews@gmail.com',
@@ -60,7 +60,8 @@ print("Window size:", args.window_size)
 print("Lookup step:", args.lookup_step)
 print("RNN cell: LSTM")
 
-# PREDICTING THE MODEL
+########################
+### PREDICTING THE MODEL
 # Import libraries and silence annoying tensorflow messages
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -77,13 +78,20 @@ from collections import deque
 import numpy as np
 import pandas as pd
 import random
+import shutil
 import time
 import matplotlib.pyplot as plt
+import alpaca_trade_api as ata
+import datetime as dt
+from pytz import timezone
+import seaborn as sns
+sns.set()
 
 # Create these folders if they does not exist (including ticker-specific subdirectories within results, data and logs)
-outdir_results = os.path.join("results", ticker)
-outdir_logs = os.path.join("logs", ticker)
-outdir_data = os.path.join("data", ticker)
+cwd = os.getcwd()
+outdir_results = os.path.join(cwd, "results", ticker)
+outdir_logs = os.path.join(cwd, "logs", ticker)
+outdir_data = os.path.join(cwd, "data", ticker)
 if not os.path.isdir("results"):
     os.mkdir("results")
 if not os.path.isdir(outdir_results):
@@ -98,7 +106,8 @@ if not os.path.isdir(outdir_data):
     os.mkdir(outdir_data)
 
 # Date strings
-# date now
+today=dt.date.today()
+year_ago=today - dt.timedelta(days=365)
 date_now = time.strftime("%Y-%m-%d_%H-%M-%S")
 date_now_notime = time.strftime("%Y-%m-%d")
 dt_string = time.strftime("%b-%d-%Y %I:%M:%S %p")
@@ -115,6 +124,26 @@ def shuffle_in_unison(a, b):
     np.random.shuffle(a)
     np.random.set_state(state)
     np.random.shuffle(b)
+
+# Clear output directories
+for files in os.listdir(outdir_results):
+  path = os.path.join(outdir_results, files)
+  try:
+    shutil.rmtree(path)
+  except OSError:
+    os.remove(path)
+for files in os.listdir(outdir_logs):
+  path = os.path.join(outdir_logs, files)
+  try:
+    shutil.rmtree(path)
+  except OSError:
+    os.remove(path) 
+for files in os.listdir(outdir_data):
+  path = os.path.join(outdir_data, files)
+  try:
+    shutil.rmtree(path)
+  except OSError:
+    os.remove(path) 
 
 # Ticker data filename (yahoo finance)
 ticker_data_filename = os.path.join(outdir_data, f"{ticker}_{date_now_notime}.csv")
@@ -138,9 +167,11 @@ def load_data(ticker, window_size=args.window_size, scale=True, shuffle=True, lo
     # see if ticker is already a loaded stock from yahoo finance
     if isinstance(ticker, str):
         # load it from yahoo_fin library
-        df = si.get_data(ticker)
+        print("Loading new data")
+        df = si.get_data(ticker, start_date=year_ago, end_date=today)
     elif isinstance(ticker, pd.DataFrame):
         # already loaded, use it directly
+        print("Data already loaded")
         df = ticker
     else:
         raise TypeError("ticker can be either a str or a `pd.DataFrame` instances")
@@ -151,7 +182,7 @@ def load_data(ticker, window_size=args.window_size, scale=True, shuffle=True, lo
     # make sure that the passed feature_columns exist in the dataframe
     for col in feature_columns:
         assert col in df.columns, f"'{col}' does not exist in the dataframe."
-    # add date as a column
+    # Add date as a new column to end of df (first column also contains date as Unnamed column 0)
     if "date" not in df.columns:
         df["date"] = df.index
     if scale:
@@ -246,7 +277,8 @@ def create_model(sequence_length, n_features, units=256, cell=LSTM, n_layers=2, 
     model.compile(loss=loss, metrics=["mean_absolute_error"], optimizer=optimizer)
     return model
 
-# TRAINING THE MODEL
+######################
+### TRAINING THE MODEL
 
 # Window size or the sequence length
 WINDOW_SIZE = args.window_size
@@ -301,7 +333,7 @@ EPOCHS = args.epoch
 
 
 # model name to save, making it as unique as possible based on parameters
-model_name = f"{date_now}_{ticker}-{shuffle_str}-{scale_str}-{split_by_date_str}-\
+model_name = f"{date_now_notime}_{ticker}-{shuffle_str}-{scale_str}-{split_by_date_str}-\
 {LOSS}-{OPTIMIZER}-{CELL.__name__}-seq-{WINDOW_SIZE}-step-{LOOKUP_STEP}-layers-{N_LAYERS}-units-{UNITS}"
 if BIDIRECTIONAL:
     model_name += "-b"
@@ -334,9 +366,10 @@ history = model.fit(data["X_train"], data["y_train"],
                     callbacks=[checkpointer, tensorboard],
                     verbose=1)
     
-# tensorboard --logdir="logs"
-    
-# TESTING THE MODEL
+#tensorboard --logdir="outdir_logs"
+
+#####################    
+### TESTING THE MODEL
 
 def plot_graph(test_df):
     """
@@ -345,10 +378,13 @@ def plot_graph(test_df):
     """
     plt.plot(test_df[f'true_adjclose_{LOOKUP_STEP}'], c='b')
     plt.plot(test_df[f'adjclose_{LOOKUP_STEP}'], c='r')
+    plt.plot(test_df[f'high'], c='y')
+    plt.plot(test_df[f'low'], c='y')
+    plt.fill_between(test_df.index, test_df[f'high'], test_df[f'low'], alpha=0.2)
     plt.title(ticker)
     plt.xlabel("Date")
     plt.ylabel("Price ($)")
-    plt.legend(["Actual Price", "Predicted Price"])
+    plt.legend(["Actual Price", "Predicted Price", "High/Low"], loc='upper left')
     plt.show()
     
 def get_final_df(model, data):
@@ -446,6 +482,12 @@ print("Total sell profit: $",total_sell_profit)
 print("Total profit: $",total_profit)
 print("Profit per trade: $",profit_per_trade)
 
+#final_df.to_csv(r'final_df.csv')
+
 # plot true/pred prices graph -- want to save as .png and have local html hosting monitored stocks
 plot_graph(final_df)
+
+#ax = sns.lineplot(final_df)
+#ax.legend(loc='upper left')
+#plt.show()
 
