@@ -29,6 +29,7 @@ parser.add_argument("-e", "--epoch", help="Epochs to train (integer, default = 5
 parser.add_argument("-s", "--test_size", help="Test ratio size, 0.2 is 20%% (decimal, default = 0.2)", type=float, metavar='', default="0.2")
 parser.add_argument("-w", "--window_size", help="Window length used to predict (integer, default = 50)", type=int, metavar='', default="50")
 parser.add_argument("-l", "--lookup_step", help="Lookup step, 1 is the next day (integer, default = 1)", type=int, metavar='', default="1")
+parser.add_argument("-k", "--keep_results", help="Keep output dataframe (saves to results directory)", action='store_true')
 
 parser.add_argument("-v", "--version", help="show program version", action="version", version="%(prog)s 0.1")
 parser.add_argument("-V", "--verbose", help="increase output verbosity", action="store_true")
@@ -39,10 +40,7 @@ if len(sys.argv) < 2:
     parser.print_help()
     sys.exit(1)
 
-# Read arguments from the command line
-args = parser.parse_args()
-    
-# Provide useful feedback
+# Read arguments from the command line and provide useful feedback
 args = parser.parse_args()
 if args.verbose:
     print("Verbosity turned on")
@@ -60,6 +58,13 @@ print("Window size:", args.window_size)
 print("Lookup step:", args.lookup_step)
 print("RNN cell: LSTM")
 
+keep_csv = print(f"_final_df.csv")
+if args.keep_results:
+  print(keep_csv)
+else:
+  print("nope!")
+
+exit()
 ########################
 ### PREDICTING THE MODEL
 # Import libraries and silence annoying tensorflow messages
@@ -456,8 +461,12 @@ if SCALE:
 else:
     mean_absolute_error = mae
     
-# get the final dataframe for the testing set
+# Get the final dataframe for the testing set, save if -k is passed
 final_df = get_final_df(model, data)
+keep_csv = print(f"{date_now_notime}_{ticker}_e{EPOCHS}_s{TEST_SIZE}_w{WINDOW_SIZE}_l{LOOKUP_STEP}_final_df.csv")
+if isinstance(args.keep_results):
+  print(keep_csv)
+#  final_df.to_csv(keep.csv)
 
 # predict the future price
 future_price = predict(model, data)
