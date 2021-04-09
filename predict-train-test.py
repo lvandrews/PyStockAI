@@ -17,6 +17,10 @@
 
 # Parse inputs or provide help
 import argparse, sys
+import datetime as dt
+
+today=dt.date.today()
+year_ago=today - dt.timedelta(days=365)
 
 # Program description
 desctext = 'predict-train-test.py: use Tensorflow2 to model stock performance and predict future performance.'
@@ -29,7 +33,8 @@ parser.add_argument("-e", "--epoch", help="Epochs to train (integer, default = 5
 parser.add_argument("-s", "--test_size", help="Test ratio size, 0.2 is 20%% (decimal, default = 0.2)", type=float, metavar='', default="0.2")
 parser.add_argument("-w", "--window_size", help="Window length used to predict (integer, default = 50)", type=int, metavar='', default="50")
 parser.add_argument("-l", "--lookup_step", help="Lookup step, 1 is the next day (integer, default = 1)", type=int, metavar='', default="1")
-parser.add_argument("-k", "--keep_results", help="Keep output dataframe (saves to results directory)", action='store_true')
+parser.add_argument("-b", "--begin_date", help="Beginning date for analysis set (e.g. 2021-04-20, default = one year ago from present date)", type=str, metavar='', default=year_ago)
+parser.add_argument("-k", "--keep_results", help="Keep output dataframe (saves as .csv to results directory)", action="store_true")
 
 parser.add_argument("-v", "--version", help="show program version", action="version", version="%(prog)s 0.1")
 parser.add_argument("-V", "--verbose", help="increase output verbosity", action="store_true")
@@ -58,13 +63,6 @@ print("Window size:", args.window_size)
 print("Lookup step:", args.lookup_step)
 print("RNN cell: LSTM")
 
-keep_csv = print(f"_final_df.csv")
-if args.keep_results:
-  print(keep_csv)
-else:
-  print("nope!")
-
-exit()
 ########################
 ### PREDICTING THE MODEL
 # Import libraries and silence annoying tensorflow messages
@@ -87,7 +85,6 @@ import shutil
 import time
 import matplotlib.pyplot as plt
 import alpaca_trade_api as ata
-import datetime as dt
 from pytz import timezone
 import seaborn as sns
 sns.set()
@@ -111,8 +108,6 @@ if not os.path.isdir(outdir_data):
     os.mkdir(outdir_data)
 
 # Date strings
-today=dt.date.today()
-year_ago=today - dt.timedelta(days=365)
 date_now = time.strftime("%Y-%m-%d_%H-%M-%S")
 date_now_notime = time.strftime("%Y-%m-%d")
 dt_string = time.strftime("%b-%d-%Y %I:%M:%S %p")
@@ -173,7 +168,7 @@ def load_data(ticker, window_size=args.window_size, scale=True, shuffle=True, lo
     if isinstance(ticker, str):
         # load it from yahoo_fin library
         print("Loading new data")
-        df = si.get_data(ticker, start_date=year_ago, end_date=today)
+        df = si.get_data(ticker, start_date=args.begin_date, end_date=today)
     elif isinstance(ticker, pd.DataFrame):
         # already loaded, use it directly
         print("Data already loaded")
@@ -463,10 +458,9 @@ else:
     
 # Get the final dataframe for the testing set, save if -k is passed
 final_df = get_final_df(model, data)
-keep_csv = print(f"{date_now_notime}_{ticker}_e{EPOCHS}_s{TEST_SIZE}_w{WINDOW_SIZE}_l{LOOKUP_STEP}_final_df.csv")
-if isinstance(args.keep_results):
-  print(keep_csv)
-#  final_df.to_csv(keep.csv)
+keep_csv = os.path.join(outdir_results, f"{date_now_notime}_{ticker}_e-{EPOCHS}_s-{TEST_SIZE}_w-{WINDOW_SIZE}_l-{LOOKUP_STEP}_final_df.csv")
+if args.keep_results:
+  final_df.to_csv(keep_csv)
 
 # predict the future price
 future_price = predict(model, data)
