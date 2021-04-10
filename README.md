@@ -8,6 +8,7 @@ Automated system for stock price prediction. Newbie in progress.
  * [Tensorflow](https://www.tensorflow.org/)  
  * [Initial code for using (Tensorflow) to predict stock prices](https://www.thepythoncode.com/article/stock-price-prediction-in-python-using-tensorflow-2-and-keras)  
  * High cost of living  
+ * Curiosity -- can I use this for bioinformatic investigation or monitoring data trends in the workplace?
 
 ### Results to date (2021-04-10)
  * As expected, the program yields a poor estimation of future stock performance
