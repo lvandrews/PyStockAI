@@ -34,6 +34,7 @@ parser.add_argument("-s", "--test_size", help="Test ratio size, 0.2 is 20%% (dec
 parser.add_argument("-w", "--window_size", help="Window length used to predict (integer, default = 50)", type=int, metavar='', default="50")
 parser.add_argument("-l", "--lookup_step", help="Lookup step, 1 is the next day (integer, default = 1)", type=int, metavar='', default="1")
 parser.add_argument("-b", "--begin_date", help="Beginning date for analysis set (e.g. 2021-04-20, default = one year ago from present date)", type=str, metavar='', default=year_ago)
+parser.add_argument("-a", "--all_time", help="Use all available data (supercedes -b)", action="store_true")
 parser.add_argument("-k", "--keep_results", help="Keep output dataframe (saves as .csv to results directory)", action="store_true")
 
 parser.add_argument("-v", "--version", help="show program version", action="version", version="%(prog)s 0.1")
@@ -164,21 +165,30 @@ def load_data(ticker, window_size=args.window_size, scale=True, shuffle=True, lo
         test_size (float): ratio for test data, default is 0.2 (20% testing data)
         feature_columns (list): the list of features to use to feed into the model, default is everything grabbed from yahoo_fin
     """
+
+    # Load data from Yahoo Finance using specified range or all time
+    if args.all_time:
+      df = si.get_data(ticker)
+
+    elif args.begin_date:
+      df = si.get_data(ticker, start_date=args.begin_date, end_date=today)
+  
     # see if ticker is already a loaded stock from yahoo finance
-    if isinstance(ticker, str):
+    # if isinstance(ticker, str):
         # load it from yahoo_fin library
-        print("Loading new data")
-        df = si.get_data(ticker, start_date=args.begin_date, end_date=today)
-    elif isinstance(ticker, pd.DataFrame):
+        # print("Loading new data")
+        # df = si.get_data(ticker, start_date=args.begin_date, end_date=today)
+    # elif isinstance(ticker, pd.DataFrame):
         # already loaded, use it directly
-        print("Data already loaded")
-        df = ticker
+        # print("Data already loaded")
+        # df = ticker
     else:
         raise TypeError("ticker can be either a str or a `pd.DataFrame` instances")
     # this will contain all the elements we want to return from this function
     result = {}
     # we will also return the original dataframe itself
     result['df'] = df.copy()
+
     # make sure that the passed feature_columns exist in the dataframe
     for col in feature_columns:
         assert col in df.columns, f"'{col}' does not exist in the dataframe."
