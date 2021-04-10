@@ -173,6 +173,7 @@ def load_data(ticker, window_size=args.window_size, scale=True, shuffle=True, lo
     elif args.begin_date:
       df = si.get_data(ticker, start_date=args.begin_date, end_date=today)
   
+    ### THIS PART ONLY FOR RUNNING ON COMMAND LINE
     # see if ticker is already a loaded stock from yahoo finance
     # if isinstance(ticker, str):
         # load it from yahoo_fin library
@@ -338,10 +339,6 @@ OPTIMIZER = "adam"
 BATCH_SIZE = 64
 EPOCHS = args.epoch
 
-# TICKER TO TEST
-#ticker = ticker
-
-
 # model name to save, making it as unique as possible based on parameters
 model_name = f"{date_now_notime}_{ticker}-{shuffle_str}-{scale_str}-{split_by_date_str}-\
 {LOSS}-{OPTIMIZER}-{CELL.__name__}-seq-{WINDOW_SIZE}-step-{LOOKUP_STEP}-layers-{N_LAYERS}-units-{UNITS}"
@@ -375,7 +372,8 @@ history = model.fit(data["X_train"], data["y_train"],
                     validation_data=(data["X_test"], data["y_test"]),
                     callbacks=[checkpointer, tensorboard],
                     verbose=1)
-    
+
+# Would love to have an automated tensorboard command that generates useful plots without having to open browser    
 #tensorboard --logdir="outdir_logs"
 
 #####################    
@@ -383,18 +381,19 @@ history = model.fit(data["X_train"], data["y_train"],
 
 def plot_graph(test_df):
     """
-    This function plots true close price along with predicted close price
-    with blue and red colors respectively
+    This function plots true close price (red) true future price (green),
+    predicted close price (blue), and true high/low (yellow)
     """
-    plt.plot(test_df[f'true_adjclose_{LOOKUP_STEP}'], c='b')
-    plt.plot(test_df[f'adjclose_{LOOKUP_STEP}'], c='r')
+    plt.plot(test_df[f'adjclose_{LOOKUP_STEP}'], c='b')
+    plt.plot(test_df[f'true_adjclose_{LOOKUP_STEP}'], c='g')
+    plt.plot(test_df[f'adjclose'], c='r')
     plt.plot(test_df[f'high'], c='y')
     plt.plot(test_df[f'low'], c='y')
-    plt.fill_between(test_df.index, test_df[f'high'], test_df[f'low'], alpha=0.2)
+    plt.fill_between(test_df.index, test_df[f'high'], test_df[f'low'], alpha=0.1)
     plt.title(ticker)
     plt.xlabel("Date")
     plt.ylabel("Price ($)")
-    plt.legend(["Actual Price", "Predicted Price", "High/Low"], loc='upper left')
+    plt.legend(["Predicted Future Price", f"True Future Price ({LOOKUP_STEP} Days)", "Actual Close Price", "Actual High/Low"], loc='upper left')
     plt.show()
     
 def get_final_df(model, data):
@@ -466,11 +465,8 @@ if SCALE:
 else:
     mean_absolute_error = mae
     
-# Get the final dataframe for the testing set, save if -k is passed
+# Define final_df    
 final_df = get_final_df(model, data)
-keep_csv = os.path.join(outdir_results, f"{date_now_notime}_{ticker}_e-{EPOCHS}_s-{TEST_SIZE}_w-{WINDOW_SIZE}_l-{LOOKUP_STEP}_final_df.csv")
-if args.keep_results:
-  final_df.to_csv(keep_csv)
 
 # predict the future price
 future_price = predict(model, data)
@@ -495,7 +491,10 @@ print("Total sell profit: $",total_sell_profit)
 print("Total profit: $",total_profit)
 print("Profit per trade: $",profit_per_trade)
 
-#final_df.to_csv(r'final_df.csv')
+# Get the final dataframe for the testing set, save if -k is passed
+keep_csv = os.path.join(outdir_results, f"{date_now_notime}_{ticker}_e-{EPOCHS}_s-{TEST_SIZE}_w-{WINDOW_SIZE}_l-{LOOKUP_STEP}_final_df.csv")
+if args.keep_results:
+  final_df.to_csv(keep_csv)
 
 # plot true/pred prices graph -- want to save as .png and have local html hosting monitored stocks
 plot_graph(final_df)
