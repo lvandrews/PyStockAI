@@ -8,3 +8,15 @@ Automated system for stock price prediction. Newbie in progress.
  * [Tensorflow](https://www.tensorflow.org/)  
  * [Initial code for using (Tensorflow) to predict stock prices](https://www.thepythoncode.com/article/stock-price-prediction-in-python-using-tensorflow-2-and-keras)  
  * High cost of living  
+
+### Results to date (2021-04-10)
+ * As expected, the program yields a poor estimation of future stock performance
+ * I have moved the code from the tutorial to a single script (predict-train-test.py) and begun to modify it
+ * Argparse variables added -- can choose date range for analysis, set tf variables, and of course stock ticker
+ * Began trying to improve the visualization -- added seaborn, shaded band representing high/low over time
+ * High/low over time does not behave as expected -- upon closer inspection, the "actual" performace over time also appears incorrect
+ * Added -k argument to retain dataframe for a run as .csv to allow to debug the representation problem
+
+### Example output (2021-04-10)
+![image](https://user-images.githubusercontent.com/47641830/114276596-1ccd3f00-99dc-11eb-96c5-f29d634a1277.png)
+
