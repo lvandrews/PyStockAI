@@ -12,7 +12,7 @@ Automated system for stock price prediction. Newbie in progress.
 
 ### Results to date (2021-04-10)
  * As expected, the program yields a poor estimation of future stock performance
- * I have moved the code from the tutorial to a single script (predict-train-test.py) and begun modifying it as an eexercise in improving my understanding of Python3 code
+ * I have moved the code from the tutorial to a single script (predict-train-test.py) and begun modifying it as an exercise in improving my understanding of Python3 code
  * Argparse variables added -- can choose date range for analysis, set tf variables, and of course stock ticker
  * Began trying to improve the visualization -- added seaborn, shaded band representing high/low over time
  * High/low over time does not behave as expected -- upon closer inspection, the "actual" performace over time also appears incorrect
