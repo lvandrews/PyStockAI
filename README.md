@@ -17,6 +17,12 @@ Automated system for stock price prediction. Newbie in progress.
  * High/low over time does not behave as expected -- upon closer inspection, the "actual" performace over time also appears incorrect
  * Added -k argument to retain dataframe for a run as .csv to allow to debug the representation problem
 
+### Goals
+ * Fix the visualization problem
+ * Add more useful visuals (volume, etc), change high/low band to predicted high/low band
+ * Add module to scrape for additional useful variables to include in model
+ * Example scraper module might incorporate weather data -- want scraped data hosted locally so database is merely updated rather than completely rebuilt with each call
+
 ### Example output (2021-04-10)
 ![image](https://user-images.githubusercontent.com/47641830/114276596-1ccd3f00-99dc-11eb-96c5-f29d634a1277.png)
 
