@@ -25,5 +25,5 @@ Automated system for stock price prediction. Newbie in progress.
  * Example scraper module might incorporate weather data -- want scraped data hosted locally so database is merely updated rather than completely rebuilt with each call
 
 ### Example output (2021-04-10)
-![image](https://user-images.githubusercontent.com/47641830/114276596-1ccd3f00-99dc-11eb-96c5-f29d634a1277.png)
+![image](https://user-images.githubusercontent.com/47641830/114779654-3ac3d800-9d2b-11eb-97a5-9ddf37953a9b.png)
 
