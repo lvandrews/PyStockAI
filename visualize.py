@@ -77,7 +77,7 @@ print("Date range:", year_ago, " - ", today)
 #y_rng = np.cumsum(rng.randn(500, 6), 0)
 
 # Get some stock data for the last year for AVXL
-df = si.get_data("AVXL", start_date=year_ago, end_date=today)
+df = si.get_data(ticker, start_date=year_ago, end_date=today)
 
 df["date"] = df.index
 df["difference"] = df["close"] - df["open"]
