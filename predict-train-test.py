@@ -32,7 +32,7 @@ parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, requ
 parser.add_argument("-e", "--epoch", help="Epochs to train (integer, default = 5)", type=int, metavar='', default="5")
 parser.add_argument("-s", "--test_size", help="Test ratio size, 0.2 is 20%% (decimal, default = 0.2)", type=float, metavar='', default="0.2")
 parser.add_argument("-w", "--window_size", help="Window length used to predict (integer, default = 50)", type=int, metavar='', default="50")
-parser.add_argument("-l", "--lookup_step", help="Lookup step, 1 is the next day (integer, default = 1)", type=int, metavar='', default="1")
+parser.add_argument("-l", "--lookup_step", help="Lookup step, 1 is the next day (integer, default = 5)", type=int, metavar='', default="5")
 parser.add_argument("-b", "--begin_date", help="Beginning date for analysis set (e.g. 2021-04-20, default = one year ago from present date)", type=str, metavar='', default=year_ago)
 parser.add_argument("-a", "--all_time", help="Use all available data (supercedes -b)", action="store_true")
 parser.add_argument("-k", "--keep_results", help="Keep output dataframe (saves as .csv to results directory)", action="store_true")
@@ -208,6 +208,11 @@ def load_data(ticker, window_size=args.window_size, scale=True, shuffle=True, lo
     # add the target column (label) by shifting by `lookup_step`
     df['future'] = df['adjclose'].shift(-lookup_step)
     # last `lookup_step` columns contains NaN in future column
+    
+    # get last price from df
+    last_price = df.iloc[-1:]
+    lp = print(last_price)
+    
     # get them before droping NaNs
     last_sequence = np.array(df[feature_columns].tail(lookup_step))
     # drop NaNs
@@ -482,8 +487,9 @@ total_profit = total_buy_profit + total_sell_profit
 profit_per_trade = total_profit / len(final_df)
 
 # printing metrics
+print(f"\n ----- Result ({ticker}): -----\n")
 print(f"Future price after {LOOKUP_STEP} days is ${future_price:.2f}")
-print(f"{LOSS} loss:", loss)
+print(f"Huber loss:", loss)
 print("Mean Absolute Error: $",mean_absolute_error)
 print("Accuracy score:", accuracy_score)
 print("Total buy profit: $",total_buy_profit)
