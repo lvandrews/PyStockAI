@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+# 2022-10-29
+
+#setup(
+#    name='PyStockAI',
+#    version='0.1.0',
+#    description='Control script for PyStockAI',
+#    long_description=readme,
+#    author='Lela Andrews',
+#    author_email='lelavioletandrews@gmail.com',
+#    url='https://github.com/lvandrews',
+#    license=license,
+#    packages=find_packages(exclude=('tests', 'docs'))
+#)
+
+# Program description and version
+desctext = 'PyStockAI: Obtain and analyze historical stock data and store for analysis. Project future values.'
+vers='PyStockAI v0.1'
+
+# Parse inputs or provide help
+import argparse, sys, json, time, os, pprint
+import datetime as dt
+from alpha_vantage.timeseries import TimeSeries
+from os.path import dirname, abspath
+from yahoo_fin import stock_info as si
+
+# Define date string, repo directories, credentials
+date_now_notime = time.strftime("%Y-%m-%d")
+repodir = dirname(dirname(abspath(__file__)))
+datadir = os.path.join(repodir,"data")
+modeldir = os.path.join(repodir,"models")
+scriptdir = os.path.join(repodir,"scripts")
+av_creds = os.path.join(scriptdir,"creds.json")
+
+
+# Initialize parser
+parser = argparse.ArgumentParser(description=desctext)
+
+parser.add_argument("-v", "--version", help="show program version", action="version", version=vers)
+parser.add_argument("-V", "--verbose", help="increase output verbosity", action="store_true")
+
+# Print help if no arguments supplied
+if len(sys.argv) < 2:
+    parser.print_help()
+    sys.exit(1)
+
+# Read arguments from the command line and provide useful feedback
+args = parser.parse_args()
+if args.verbose:
+    print("Verbosity turned on")
+
+print("PyStockAI script not yet functional... Please work on me!!")
+quit()
