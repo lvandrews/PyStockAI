@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 
-# Script modified from tutorial here: https://towardsdatascience.com/getting-rich-quick-with-machine-learning-and-stock-market-predictions-696802da94fe
 # 2022-10-05
+
+#setup(
+#    name='basic_model.py',
+#    version='0.1.0',
+#    description='Basic tf model script for PyStockAI',
+#    long_description=readme,
+#    author='Lela Andrews',
+#    author_email='lelavioletandrews@gmail.com',
+#    url='https://github.com/lvandrews',
+#    license=license,
+#    packages=find_packages(exclude=('tests', 'docs'))
+#)
 
 # Program description and version
 desctext = 'basic_model.py: Basic model stock analysis based on past performance.'
