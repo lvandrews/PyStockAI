@@ -15,8 +15,8 @@
 #)
 
 # Program description and version
-desctext = 'retrieve_data.py: Obtain historical stock data and store for analysis.'
-vers='retrieve_data.py v0.1'
+desctext = 'retrieve_stock_data.py: Obtain historical stock data and store for analysis.'
+vers='retrieve_stock_data.py v0.1'
 
 # Parse inputs or provide help
 import argparse, sys, json, time, os, pprint
