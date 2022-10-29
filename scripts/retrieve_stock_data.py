@@ -3,9 +3,9 @@
 # 2022-10-01
 
 #setup(
-#    name='visualize',
+#    name='retrieve_stock_data.py',
 #    version='0.1.0',
-#    description='Visualize script for PyStockAI',
+#    description='Data retrieval script for PyStockAI',
 #    long_description=readme,
 #    author='Lela Andrews',
 #    author_email='lelavioletandrews@gmail.com',
