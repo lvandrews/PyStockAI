@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 
-# Script modified from tutorial here: https://towardsdatascience.com/getting-rich-quick-with-machine-learning-and-stock-market-predictions-696802da94fe
 # 2022-10-01
 
+#setup(
+#    name='visualize',
+#    version='0.1.0',
+#    description='Visualize script for PyStockAI',
+#    long_description=readme,
+#    author='Lela Andrews',
+#    author_email='lelavioletandrews@gmail.com',
+#    url='https://github.com/lvandrews',
+#    license=license,
+#    packages=find_packages(exclude=('tests', 'docs'))
+#)
+
 # Program description and version
-desctext = 'retrieve_data.py: use AlphaVantage stock API to pull stock data and store for analysis.'
+desctext = 'retrieve_data.py: Obtain historical stock data and store for analysis.'
 vers='retrieve_data.py v0.1'
 
 # Parse inputs or provide help
@@ -25,7 +36,7 @@ av_creds = os.path.join(scriptdir,"creds.json")
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
 parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar="", required=True)
-parser.add_argument("-d", "--data_type", help="Data type to retrieve (daily, daily_adj (p), intraday or intraday_ext; default=daily)", choices=["daily", "adj_daily", "intraday", "intraday_ext"], type=str, metavar="", default="daily")
+parser.add_argument("-d", "--data_type", help="Data type to retrieve (daily, daily_adj (p), intraday or intraday_ext; default=intraday)", choices=["daily", "adj_daily", "intraday", "intraday_ext"], type=str, metavar="", default="intraday")
 parser.add_argument("-n", "--interval", help="Time interval between data points (intraday only; 1min, 5min, 15min, 30min, 60min); default=5min)", choices=["1min", "5min", "15min", "30min", "60min"], type=str, metavar="", default="5min")
 parser.add_argument("-s", "--source", help="Select data source; default=AlphaVantage", choices=["alphavantage", "yahoo"], type=str, metavar="", default="alphavantage")
 parser.add_argument("-v", "--version", help="show program version", action="version", version=vers)
@@ -44,7 +55,7 @@ if args.verbose:
 # Parse inputs and set ticker to uppercase if lowercase was entered
 ticker = args.ticker.upper()
 dtype = args.data_type
-ticker_data_filename = os.path.join(datadir,f"{ticker}_{date_now_notime}_{dtype}.csv")
+ticker_data_filename = os.path.join(datadir,ticker,"",f"{ticker}_{date_now_notime}_{dtype}.csv")
 time_window = dtype
 source = args.source
 intvl = args.interval
