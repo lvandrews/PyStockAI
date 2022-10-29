@@ -1,6 +1,8 @@
 # PyStockAI
 Automated system for stock price prediction. Newbie in progress.
 
+Not for mass consumption...
+
 
 ### Attributions  
  * [Repo organization](https://docs.python-guide.org/writing/structure/)  
