@@ -27,3 +27,9 @@ Automated system for stock price prediction. Newbie in progress.
 ### Example output (2021-04-14)
 ![image](https://user-images.githubusercontent.com/47641830/114779654-3ac3d800-9d2b-11eb-97a5-9ddf37953a9b.png)
 
+## Update 2022-10-29
+ * Have found time to start working on this again
+ * Trying to learn from other sources as well
+ * Working through the data output step-by-step to correct errors noted above
+ * Rebuilding the script structure and will remove attributions once the code is comfortably my own
+
