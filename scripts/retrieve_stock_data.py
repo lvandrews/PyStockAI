@@ -55,11 +55,16 @@ if args.verbose:
 # Parse inputs and set ticker to uppercase if lowercase was entered
 ticker = args.ticker.upper()
 dtype = args.data_type
-ticker_data_filename = os.path.join(datadir,ticker,"",f"{ticker}_{date_now_notime}_{dtype}.csv")
+ticker_output_dir = os.path.join(datadir,ticker,"")
+ticker_data_filename = os.path.join(ticker_output_dir,"",f"{ticker}_{date_now_notime}_{dtype}.csv")
 time_window = dtype
 source = args.source
 intvl = args.interval
 
+# Make output directory if doesn't exist'
+if not os.path.exists(ticker_output_dir):
+    os.mkdir(ticker_output_dir)
+       
 # Print important model parameters
 print("Ticker symbol:", ticker)
 print("Data type:", dtype)
