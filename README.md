@@ -6,9 +6,10 @@ This is merely a project to help me better learn python, not an actual useful ut
 Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
 
 ## To do list (2022-11-04):
- * Add yahoo finance to retrieve_data.py -- ON HOLD --
+ * Add yahoo finance to retrieve_stock_data.py -- ON HOLD --
+ * Add some technical indicators to alpha_vantage option in retrieve_stock_data.py
  * Build basic_analysis.py
-   * Copy latest data obtained by retrieve_data.py
+   * Copy latest data obtained by retrieve_stock_data.py
    * Add moving averages (5, 10, 20, 50, 100)
    * Add relative strength index (RSI)
    * Other technical indicator?
@@ -56,7 +57,7 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
  1. Install python requirements with pip `pip install -r requirements`
  
 ## Obtain and analyze data
- 1. Run retrieve_data.py to obtain data for one particular stock
+ 1. Run retrieve_stock_data.py to obtain data for one particular stock
  1. Run basic_model.py to build out technical indicators
  1. Run tensor_analysis.py to build out ML-based predictions
  1. Run hmm_analysis.py to build out HMM-based predictions (script not yet built)
