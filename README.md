@@ -25,6 +25,7 @@ This is merely a project to help me better learn python, not an actual useful ut
    * Multiple plots per screen
    * Date of analysis, raw data used on screen
    * Useful calculated values on screen
+   * Change name of script to something more useful
 
 ## Important notes
  * For those running a computer without CUDA architecture (requires CPU instead of GPU for ML processing), will need to compile tensorfow from source on your particular system
@@ -36,3 +37,11 @@ This is merely a project to help me better learn python, not an actual useful ut
  1. Install tensorflow and keras (see above about compiling for CPU)
  1. Install ta-lib dependencies in dependencies directory, follow instructions in that README
  1. Install python requirements with pip `pip install -r requirements`
+ 
+## Obtain and analyze data
+ 1. Run retrieve_data.py to obtain data for one particular stock
+ 1. Run basic_model.py to build out technical indicators
+ 1. Run tensor_analysis.py to build out ML-based predictions
+ 1. Run hmm_analysis.py to build out HMM-based predictions
+ 1. Run visualize.py for graphical output and technical details
+ 
