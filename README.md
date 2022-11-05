@@ -7,12 +7,19 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
 
 ## To do list (2022-11-04):
  * Add yahoo finance to retrieve_stock_data.py -- ON HOLD --
- * Add some technical indicators to alpha_vantage option in retrieve_stock_data.py
+ * Add some technical indicators to alpha_vantage option in retrieve_stock_data.py -- CALCULATING FIRST TO MINIMIZE API CALLS --
  * Build basic_analysis.py
    * Copy latest data obtained by retrieve_stock_data.py
-   * Add moving averages (5, 10, 20, 50, 100)
-   * Add relative strength index (RSI)
-   * Other technical indicator?
+   * Calculate technical indicators
+     * SMA (Simple Moving Average -- Automatically calculate for SMA = 5, 10, 20, 30, 60, 200)
+     * EMA (Exponential Moving Average)
+     * MACD (Moving Average Convergence/Divergence)
+     * VWAP (Volume Weighted Average Price)
+     * RSI (Relative Strength Index)
+     * STOCH (Stochastic Oscillator)
+     * ADX (Average Directional Movement Index)
+     * BBANDS (Bollinger Bands)
+     * AD (Chaikin A/D Line)
    * Add buy/sell function, test function over time, calculate best success strategy
  * Build tensor_analysis.py
    * Copy latest data from basic_analysis.py
