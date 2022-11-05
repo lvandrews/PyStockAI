@@ -51,6 +51,6 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
  1. Run hmm_analysis.py to build out HMM-based predictions (script not yet built)
  1. Run visualize.py for graphical output and technical details
  1. Run monitor_analysis.py to update all symbols in analysis list (script not yet built)
-   * Need to build list of symbols and maintenance scripts
+     * Need to build list of symbols and maintenance scripts
  1. Observe output on private website (need to determine how to do this...)
  
