@@ -23,7 +23,8 @@ import argparse, sys, json, time, os, pprint
 import datetime as dt
 from alpha_vantage.timeseries import TimeSeries
 from os.path import dirname, abspath
-from yahoo_fin import stock_info as si
+#from yahoo_fin import stock_info as si
+#import yfinance as yf
 
 # Define date string, repo directories, credentials
 date_now_notime = time.strftime("%Y-%m-%d")
@@ -102,7 +103,7 @@ if source == "alphavantage":
 if source == "yahoo":
     print("\nYahoo finance calls disabled at this time\n ----- EXITING -----\n")
     quit()
-#    def save_dataset(symbol, time_window):
+#   def save_dataset(symbol, time_window):
 #        credentials = json.load(open(av_creds, 'r'))
 #        api_key = credentials['av_api_key']
 #        print(symbol, time_window)
