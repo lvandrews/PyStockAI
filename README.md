@@ -41,6 +41,7 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
  1. Clone repo `git clone https://github.com/lvandrews/PyStockAI.git`
  1. Install python3 (apt, yum, etc)
  1. Install tensorflow and keras (see above about compiling for CPU)
+     * Need to add directions in dependencies directory
  1. Install ta-lib dependencies in dependencies directory, follow instructions in that README
  1. Install python requirements with pip `pip install -r requirements`
  
