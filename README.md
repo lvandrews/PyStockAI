@@ -11,15 +11,16 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
  * Build basic_analysis.py
    * Copy latest data obtained by retrieve_stock_data.py
    * Calculate technical indicators
-     * SMA (Simple Moving Average -- Automatically calculate for SMA = 5, 10, 20, 30, 60, 200)
-     * EMA (Exponential Moving Average)
-     * MACD (Moving Average Convergence/Divergence)
-     * VWAP (Volume Weighted Average Price)
-     * RSI (Relative Strength Index)
-     * STOCH (Stochastic Oscillator)
-     * ADX (Average Directional Movement Index)
-     * BBANDS (Bollinger Bands)
-     * AD (Chaikin A/D Line)
+     * SMA (Simple Moving Average -- Automatically calculate for SMA = 5, 10, 20, 30, 60, 200) -- talib function MA or SMA
+     * EMA (Exponential Moving Average) -- talib function
+     * MACD (Moving Average Convergence/Divergence) -- talib function
+     * RSI (Relative Strength Index) -- talib function
+     * STOCH (Stochastic Oscillator) -- talib function
+     * STOCHRSI (Stochastic Relative Strength Index) -- talib function
+     * ADX (Average Directional Movement Index) -- talib function
+     * BBANDS (Bollinger Bands) -- talib function
+     * AD (Chaikin A/D Line) -- talib function
+     * DX (Directional Movement Index) -- talib function
    * Add buy/sell function, test function over time, calculate best success strategy
  * Build tensor_analysis.py
    * Copy latest data from basic_analysis.py
