@@ -6,10 +6,25 @@ This is merely a project to help me better learn python, not an actual useful ut
 ## To do list (2022-11-04):
  * Add yahoo finance to retrieve_data.py
  * Build basic_analysis.py
-   * grwe
-   * hcfj
-
-
+   * Copy latest data obtained by retrieve_data.py
+   * Add moving averages (5, 10, 20, 50, 100)
+   * Add relative strength index (RSI)
+   * Other technical indicator?
+   * Add buy/sell function, test function over time, calculate best success strategy
+ * Build tensor_analysis.py
+   * Copy latest data from basic_analysis.py
+   * Train/run model using different strategies
+   * Predict next 1-10 days with confidence interval
+   * Add buy/sell function, test function over time, calculate best success strategy
+ * Build hmm_analysis.py
+   * Similar analysis as in tenstor_analysis.py
+   * Use HMM approach
+ * Update visualize.py
+   * Visualizations for each of the above
+   * Allow output to private website
+   * Multiple plots per screen
+   * Date of analysis, raw data used on screen
+   * Useful calculated values on screen
 
 ## Important notes
  * For those running a computer without CUDA architecture (requires CPU instead of GPU for ML processing), will need to compile tensorfow from source on your particular system
