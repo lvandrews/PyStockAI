@@ -6,7 +6,7 @@ This is merely a project to help me better learn python, not an actual useful ut
 Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
 
 ## To do list (2022-11-04):
- * Add yahoo finance to retrieve_data.py
+ * Add yahoo finance to retrieve_data.py -- ON HOLD --
  * Build basic_analysis.py
    * Copy latest data obtained by retrieve_data.py
    * Add moving averages (5, 10, 20, 50, 100)
