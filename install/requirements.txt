@@ -5,3 +5,8 @@ sklearn
 keras
 tensorflow
 matplotlib
+ta-lib
+yfinance
+yahoo_fin
+cython
+pandas-ta
