@@ -3,6 +3,7 @@
 import pandas as pd
 from sklearn import preprocessing
 import numpy as np
+import os, glob
 
 history_points = 50
 
@@ -77,3 +78,6 @@ def multiple_csv_to_dataset(test_set_name):
     ohlcv_test, tech_ind_test, y_test, unscaled_y_test, y_normaliser = csv_to_dataset(test_set_name)
 
     return ohlcv_train, tech_ind_train, y_train, ohlcv_test, tech_ind_test, y_test, unscaled_y_test, y_normaliser
+    
+# Locate files for basic_analysis.py
+#def locate_input_files
