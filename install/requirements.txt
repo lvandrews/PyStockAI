@@ -10,3 +10,4 @@ yfinance
 yahoo_fin
 cython
 pandas-ta
+plotly
