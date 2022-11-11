@@ -83,13 +83,28 @@ ticker_output_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_not
 #shutil.copyfile(ticker_input_daily,ticker_output_daily)
 #shutil.copyfile(ticker_input_intraday,ticker_output_intraday)
 
+# Custom Strategy definition
+CustomStrategy = ta.Strategy(
+    name="Momo and Volatility",
+    description="SMA 50,200, BBANDS, RSI, MACD and Volume SMA 20",
+    ta=[
+        {"kind": "sma", "length": 50},
+        {"kind": "sma", "length": 200},
+        {"kind": "bbands", "length": 20},
+        {"kind": "rsi"},
+        {"kind": "macd", "fast": 8, "slow": 21},
+        {"kind": "sma", "close": "volume", "length": 20, "prefix": "VOLUME"},
+    ]
+)
+
 # Create dataframes from inputs and add technical indicators, write to outputs
 # Daily
 df_daily = pd.DataFrame()
 df_daily = pd.read_csv(ticker_input_daily)
 df_daily.rename(columns={'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'}, inplace=True)
 df_daily.set_index(pd.DatetimeIndex(df_daily['date']), inplace=True)
-df_daily.ta.strategy(ta.AllStrategy)
+df_daily.ta.strategy(CustomStrategy)
+#df_daily.ta.strategy(ta.AllStrategy)
 #df_daily.ta.log_return(cumulative=True, append=True)
 #df_daily.ta.percent_return(cumulative=True, append=True)
 
