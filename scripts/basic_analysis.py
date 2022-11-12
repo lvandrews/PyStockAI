@@ -83,6 +83,8 @@ ticker_output_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_not
 #shutil.copyfile(ticker_input_daily,ticker_output_daily)
 #shutil.copyfile(ticker_input_intraday,ticker_output_intraday)
 
+
+# Use ALL strategy for now. Refine to custom strategy in the future to conserve processing time and storage space.
 # Custom Strategy definition
 CustomStrategy = ta.Strategy(
     name="Momo and Volatility",
