@@ -3,7 +3,7 @@
 # 2021-04-05
 
 #setup(
-#    name='visualize',
+#    name='visualize.py',
 #    version='0.1.0',
 #    description='Visualize script for PyStockAI',
 #    long_description=readme,
@@ -18,6 +18,7 @@
 import argparse, sys
 import datetime as dt
 import time
+import plotly.graph_objects as go
 
 # Date strings
 today=dt.date.today()
@@ -27,11 +28,10 @@ date_now_notime = time.strftime("%Y-%m-%d")
 dt_string = time.strftime("%b-%d-%Y %I:%M:%S %p")
 
 # Program description
-desctext = 'visualize.py: Generate visualizations of stock data.'
+desctext = 'visualize.py: Generate visualizations from analysis of stock data.'
 
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
-
 parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar='', required=True)
 parser.add_argument("-s", "--start", help="Start date (e.g. 2020-04-20, default = a year ago)", type=str, metavar='', default=year_ago)
 parser.add_argument("-e", "--end", help="End date (e.g. 2021-04-20, default = today)", type=str, metavar='', default=today)
@@ -48,14 +48,43 @@ if len(sys.argv) < 2:
 args = parser.parse_args()
     
 # Provide useful feedback
+#parser.parse_args()
 args = parser.parse_args()
 if args.verbose:
     print("Verbosity turned on")
-    
-parser.parse_args()
 
-# Set ticker symbol to uppercase if lowercase was entered
+# Edit below section to check for basic analysis files or provide feedback to run basic_analysis.py first
+###    
+# Parse inputs and set ticker to uppercase if lowercase was entered
 ticker = args.ticker.upper()
+ticker_datadir = os.path.join(datadir,ticker,"")
+ticker_input_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily.csv")
+ticker_input_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday.csv")
+
+# Check that inputs exist -- consider moving as def to util.py
+if not os.path.isfile(ticker_input_daily):
+    most_recent_daily = "MISSING"
+    print("Missing input file:",ticker_input_daily)
+    print("\nExiting\n")
+    quit()
+else:
+    most_recent_daily = "AVAILABLE"
+    
+
+if not os.path.isfile(ticker_input_intraday):
+    most_recent_intraday = "MISSING"
+    print("Missing input file:",ticker_input_intraday)
+    print("\nExiting\n")
+    quit()
+else:
+    most_recent_intraday = "AVAILABLE"
+
+print("\nInput files exist:\n",ticker_input_daily,"\n",ticker_input_intraday,"\n")
+
+# Copy inputs to basic analysis files
+ticker_output_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
+ticker_output_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv"
+###
 
 # Import additional libraries
 import matplotlib.pyplot as plt
@@ -63,7 +92,6 @@ plt.style.use('classic')
 #%matplotlib inline
 import numpy as np
 import pandas as pd
-from yahoo_fin import stock_info as si
 import seaborn as sns
 sns.set()
 
@@ -95,3 +123,18 @@ ax.legend(loc='upper left')
 #sns.pairplot(df, hue='difference')
 
 plt.show()
+
+
+quit()
+import plotly.graph_objects as go
+
+fig = go.Figure(
+    data=go.Ohlc(
+        x=df_out.index,
+        open=df_out["open"],
+        high=df_out["high"],
+        low=df_out["low"],
+        close=df_out["close"],
+    )
+)
+fig.show()

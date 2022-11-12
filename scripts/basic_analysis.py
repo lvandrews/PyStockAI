@@ -101,10 +101,10 @@ CustomStrategy = ta.Strategy(
 # Daily
 df_daily = pd.DataFrame()
 df_daily = pd.read_csv(ticker_input_daily)
-df_daily.rename(columns={'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'}, inplace=True)
+df_daily.rename(columns={'1. open': 'Open', '2. high': 'High', '3. low': 'Low', '4. close': 'Close', '5. volume': 'Volume'}, inplace=True)
 df_daily.set_index(pd.DatetimeIndex(df_daily['date']), inplace=True)
-df_daily.ta.strategy(CustomStrategy)
-#df_daily.ta.strategy(ta.AllStrategy)
+#df_daily.ta.strategy(CustomStrategy)
+df_daily.ta.strategy(ta.AllStrategy)
 #df_daily.ta.log_return(cumulative=True, append=True)
 #df_daily.ta.percent_return(cumulative=True, append=True)
 
@@ -115,7 +115,9 @@ df_daily.to_csv(ticker_output_daily)
 # Intraday
 df_intraday = pd.DataFrame()
 df_intraday = pd.read_csv(ticker_input_intraday)
-df_intraday.rename(columns={'1. open': 'open', '2. high': 'high', '3. low': 'low', '4. close': 'close', '5. volume': 'volume'}, inplace=True)
+df_intraday.rename(columns={'1. open': 'Open', '2. high': 'High', '3. low': 'Low', '4. close': 'Close', '5. volume': 'Volume'}, inplace=True)
+df_intraday.set_index(pd.DatetimeIndex(df_daily['date']), inplace=True)
+df_intraday.ta.strategy(ta.AllStrategy)
 df_intraday.ta.log_return(cumulative=True, append=True)
 df_intraday.ta.percent_return(cumulative=True, append=True)
 
