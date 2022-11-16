@@ -33,6 +33,7 @@ repodir = dirname(dirname(abspath(__file__)))
 datadir = os.path.join(repodir,"data")
 modeldir = os.path.join(repodir,"models")
 scriptdir = os.path.join(repodir,"scripts")
+outdir = os.path.join(repodir,"docs")
 
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
@@ -54,7 +55,8 @@ if args.verbose:
 # Parse inputs and set ticker to uppercase if lowercase was entered
 ticker = args.ticker.upper()
 ticker_datadir = os.path.join(datadir,ticker,"")
-ticker_html = os.path.join(ticker_datadir,"",f"{ticker}.html")
+html_datadir = os.path.join(outdir,"data","")
+ticker_html = os.path.join(html_datadir,"",f"{ticker}.html")
 
 # Check that input dir exists -- consider moving as def to util.py
 if not os.path.isdir(ticker_datadir):
