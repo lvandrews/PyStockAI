@@ -86,6 +86,14 @@ ticker_output_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime
 ticker_output_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv"
 ###
 
+### 
+
+# Add plot RSI, close from code example, update x axis to date, scale according to time input
+# Or... All time plot plus last 1 year plot?
+
+###
+
+
 # Import additional libraries
 import matplotlib.pyplot as plt
 plt.style.use('classic')

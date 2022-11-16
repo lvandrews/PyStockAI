@@ -31,13 +31,13 @@ repodir = os.path.join("..",os.getcwd())
 datadir = os.path.join(repodir,"data")
 modeldir = os.path.join(repodir,"models")
 scriptdir = os.path.join(repodir,"scripts")
-from util import csv_to_dataset, history_points
+from util import csv_to_dataset, data_points
 
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
 parser.add_argument("-i", "--input", help="Input file (required)", type=str, metavar="", required=True)
 parser.add_argument("-e", "--epoch", help="ML training epochs", type=int, metavar="", default=20)
-parser.add_argument("-d", "--days", help="Days of data to use", type=int, metavar="", default=20)
+parser.add_argument("-d", "--data_points", help="Number of data to use", type=int, metavar="", default=50)
 parser.add_argument("-v", "--version", help="show program version", action="version", version=vers)
 parser.add_argument("-V", "--verbose", help="increase output verbosity", action="store_true")
 
@@ -88,10 +88,10 @@ unscaled_y_test = unscaled_y[n:]
 print(ohlcv_train.shape)
 print(ohlcv_test.shape)
 
-
+quit()
 # model architecture
 
-lstm_input = Input(shape=(history_points, 5), name='lstm_input')
+lstm_input = Input(shape=(data_points, 5), name='lstm_input')
 x = LSTM(50, name='lstm_0')(lstm_input)
 x = Dropout(0.2, name='lstm_dropout_0')(x)
 x = Dense(64, name='dense_0')(x)
