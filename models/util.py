@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn import preprocessing
 import numpy as np
 
-history_points = 50
+data_points = 50
 
 
 def csv_to_dataset(csv_path):
@@ -17,12 +17,12 @@ def csv_to_dataset(csv_path):
     data_normaliser = preprocessing.MinMaxScaler()
     data_normalised = data_normaliser.fit_transform(data)
 
-    # using the last {history_points} open close high low volume data points, predict the next open value
-    ohlcv_histories_normalised = np.array([data_normalised[i:i + history_points].copy() for i in range(len(data_normalised) - history_points)])
-    next_day_open_values_normalised = np.array([data_normalised[:, 0][i + history_points].copy() for i in range(len(data_normalised) - history_points)])
+    # using the last {data_points} open close high low volume data points, predict the next open value
+    ohlcv_histories_normalised = np.array([data_normalised[i:i + data_points].copy() for i in range(len(data_normalised) - data_points)])
+    next_day_open_values_normalised = np.array([data_normalised[:, 0][i + data_points].copy() for i in range(len(data_normalised) - data_points)])
     next_day_open_values_normalised = np.expand_dims(next_day_open_values_normalised, -1)
 
-    next_day_open_values = np.array([data[:, 0][i + history_points].copy() for i in range(len(data) - history_points)])
+    next_day_open_values = np.array([data[:, 0][i + data_points].copy() for i in range(len(data) - data_points)])
     next_day_open_values = np.expand_dims(next_day_open_values, -1)
 
     y_normaliser = preprocessing.MinMaxScaler()
