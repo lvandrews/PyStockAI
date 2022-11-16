@@ -99,7 +99,7 @@ if source == "alphavantage":
         
     save_dataset(ticker, dtype)
 
-# Retrieve data function Yahoo
+# Retrieve data function Yahoo -- NEED TO FIX AS ALPHAVANTAGE NOW CHARGING FOR DAILY DATA --
 if source == "yahoo":
     print("\nYahoo finance calls disabled at this time\n ----- EXITING -----\n")
     quit()
