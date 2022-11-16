@@ -15,10 +15,11 @@
 #)
 
 # Parse inputs or provide help
-import argparse, sys
+import argparse, sys, json, time, os, pprint
 import datetime as dt
-import time
+from os.path import dirname, abspath
 import plotly.graph_objects as go
+import pandas as pd
 
 # Date strings
 today=dt.date.today()
@@ -29,6 +30,13 @@ dt_string = time.strftime("%b-%d-%Y %I:%M:%S %p")
 
 # Program description
 desctext = 'visualize.py: Generate visualizations from analysis of stock data.'
+
+# Define date string, repo directories, credentials
+date_now_notime = time.strftime("%Y-%m-%d")
+repodir = dirname(dirname(abspath(__file__)))
+datadir = os.path.join(repodir,"data")
+modeldir = os.path.join(repodir,"models")
+scriptdir = os.path.join(repodir,"scripts")
 
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
@@ -82,10 +90,19 @@ else:
 print("\nInput files exist:\n",ticker_input_daily,"\n",ticker_input_intraday,"\n")
 
 # Copy inputs to basic analysis files
-ticker_output_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
-ticker_output_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv"
-###
+ticker_basicanal_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
+ticker_basicanal_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv")
+df_daily = pd.DataFrame()
+df_daily = pd.read_csv(ticker_basicanal_daily)
 
+
+
+
+
+
+
+
+quit()
 ### 
 
 # Add plot RSI, close from code example, update x axis to date, scale according to time input
