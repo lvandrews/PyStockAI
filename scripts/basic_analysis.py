@@ -19,7 +19,7 @@ desctext='basic_analysis.py: Add technical indicator values to existing data fro
 vers='basic_analysis.py v0.1'
 
 # Parse inputs or provide help
-import argparse, sys, json, time, os, pprint
+import argparse, sys, json, time, os, pprint, glob
 import datetime as dt
 from os.path import dirname, abspath
 import pandas as pd
@@ -29,6 +29,7 @@ import shutil
 
 # Define date string, repo directories, credentials
 date_now_notime = time.strftime("%Y-%m-%d")
+d0 = pd.to_datetime(date_now_notime)
 repodir = dirname(dirname(abspath(__file__)))
 datadir = os.path.join(repodir,"data")
 modeldir = os.path.join(repodir,"models")
@@ -54,8 +55,67 @@ if args.verbose:
 # Parse inputs and set ticker to uppercase if lowercase was entered
 ticker = args.ticker.upper()
 ticker_datadir = os.path.join(datadir,ticker,"")
-ticker_input_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily.csv")
-ticker_input_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday.csv")
+
+# Check for most recent daily or daily_adj file (add intraday later)
+lof_daily = glob.glob(os.path.join(ticker_datadir,"",f"{ticker}_*_daily.csv"))
+if len(lof_daily) > 0:
+    daily_newest = max(lof_daily)
+    daily_newest_cdate = dt.datetime.fromtimestamp(os.path.getmtime(daily_newest))
+    daily_newest_age = (d0 - daily_newest_cdate)
+    daily_fname = os.path.basename(daily_newest)
+    print("Latest daily data file is", daily_newest_age.days, "days old:", daily_fname)
+    daily_data = daily_newest
+    xx = 1
+else:
+    print("No daily data found...")
+    xx = 0
+    
+lof_daily_adj = glob.glob(os.path.join(ticker_datadir,"",f"{ticker}_*_daily_adj.csv"))
+if len(lof_daily_adj) > 0:
+    daily_adj_newest = max(lof_daily_adj)
+    daily_adj_newest_cdate = dt.datetime.fromtimestamp(os.path.getmtime(daily_adj_newest))
+    daily_adj_newest_age = (d0 - daily_adj_newest_cdate)
+    daily_adj_fname = os.path.basename(daily_adj_newest)
+    print("Latest daily_adj data file is", daily_adj_newest_age.days, "days old:", daily_adj_fname)
+    daily_data = daily_adj_newest
+    xx = xx + 1
+else:
+    print("No daily_adj data found...")
+    xx = xx + 0
+
+lof_intraday = glob.glob(os.path.join(ticker_datadir,"",f"{ticker}_*_intraday.csv"))
+if len(lof_intraday) > 0:
+    intraday_newest = max(lof_intraday)
+    intraday_newest_cdate = dt.datetime.fromtimestamp(os.path.getmtime(intraday_newest))
+    intraday_newest_age = (d0 - intraday_newest_cdate)
+    intraday_fname = os.path.basename(intraday_newest)
+    print("Latest intraday data file is", intraday_newest_age.days, "days old:", intraday_fname)
+else:
+    print("No intraday data found...")
+
+if xx == 0:
+    print("\nNo daily data found for", ticker, ". Exiting...\n")
+    quit()
+
+if xx == 2:
+    daily_data = max(daily_newest,daily_adj_newest)
+
+daily_data_fname = os.path.basename(daily_data)    
+print("\nDaily data source:", daily_data_fname)
+
+#ticker_input_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily.csv")
+#ticker_input_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday.csv")
+
+
+
+
+
+
+
+
+### END
+quit()
+
 
 # Check that inputs exist -- consider moving as def to util.py
 if not os.path.isfile(ticker_input_daily):
