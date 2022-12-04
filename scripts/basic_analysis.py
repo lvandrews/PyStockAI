@@ -38,7 +38,7 @@ scriptdir = os.path.join(repodir,"scripts")
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
 parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar="", required=True)
-parser.add_argument("-s", "--strategy", help="Select strategy; default=ALL", choices=["ALL", "buy", "sell"], type=str, metavar="", default="ALL")
+parser.add_argument("-s", "--strategy", help="Select strategy; default=ALL", choices=["ALL", "custom"], type=str, metavar="", default="ALL")
 parser.add_argument("-v", "--version", help="Show program version", action="version", version=vers)
 parser.add_argument("-V", "--verbose", help="Increase output verbosity", action="store_true")
 
@@ -91,7 +91,8 @@ if xx == 0:
 
 if xx == 2:
     daily_data = max(daily_newest,daily_adj_newest)
-    daily_data_fname = os.path.basename(daily_data) 
+    daily_data_fname = os.path.basename(daily_data)
+    daily_output = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
 
 # Check if intraday exists
 lof_intraday = glob.glob(os.path.join(ticker_datadir,"",f"{ticker}_*_intraday.csv"))
@@ -103,6 +104,7 @@ if len(lof_intraday) > 0:
     print("Latest intraday data file is", intraday_newest_age.days, "days old:", intraday_fname)
     intraday_data = intraday_newest
     intraday_data_fname = os.path.basename(intraday_data)
+    intraday_output = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv")
 else:
     print("No intraday data found...")
     intraday_data_fname = "NONE"
@@ -112,8 +114,8 @@ print("\nDaily data source:   ", daily_data_fname, "\nIntraday data source:", in
 
 
 # Define available strategies
-# Use ALL strategy for now (built-in to ta-lib). Refine to custom strategy in the future to conserve processing time and storage space.
-quit()
+# Use ALL strategy for now (built-in to ta-lib). Refine to custom strategy in the future to conserve processing time and storage space. Move to separate file for defs if this becomes useful.
+#quit()
 # Custom Strategy definition
 CustomStrategy = ta.Strategy(
     name="Momo and Volatility",
@@ -130,34 +132,44 @@ CustomStrategy = ta.Strategy(
 
 # Create dataframes from inputs and add technical indicators, write to outputs
 # Daily
+print("Processing daily data...")
 df_daily = pd.DataFrame()
-df_daily = pd.read_csv(ticker_input_daily)
+df_daily = pd.read_csv(daily_data)
+df_daily.set_index(pd.DatetimeIndex(df_daily['Date']), inplace=True)
 
-#df_daily.ta.strategy(CustomStrategy)
-df_daily.ta.strategy(ta.AllStrategy)
-#df_daily.ta.log_return(cumulative=True, append=True)
-#df_daily.ta.percent_return(cumulative=True, append=True)
+if strategy == "ALL":
+    df_daily.ta.strategy(ta.AllStrategy)
+elif strategy == "custom":
+    df_daily.ta.strategy(CustomStrategy)
+
+df_daily.ta.log_return(cumulative=True, append=True)
+df_daily.ta.percent_return(cumulative=True, append=True)
 
 print(df_daily)
 
-df_daily.to_csv(ticker_output_daily)
+df_daily.to_csv(daily_output)
 
 # Intraday
-df_intraday = pd.DataFrame()
-df_intraday = pd.read_csv(ticker_input_intraday)
-df_intraday.rename(columns={'1. open': 'Open', '2. high': 'High', '3. low': 'Low', '4. close': 'Close', '5. volume': 'Volume'}, inplace=True)
-df_intraday.set_index(pd.DatetimeIndex(df_daily['date']), inplace=True)
-df_intraday.ta.strategy(ta.AllStrategy)
-df_intraday.ta.log_return(cumulative=True, append=True)
-df_intraday.ta.percent_return(cumulative=True, append=True)
+if len(lof_intraday) > 0:
+    print("Processing intraday data...")
+    df_intraday = pd.DataFrame()
+    df_intraday = pd.read_csv(intraday_data)
+    df_intraday.set_index(pd.DatetimeIndex(df_intraday['Date']), inplace=True)
+    if strategy == "ALL":
+        df_intraday.ta.strategy(ta.AllStrategy)
+    elif strategy == "custom":
+        df_intraday.ta.strategy(CustomStrategy)
+    df_intraday.ta.log_return(cumulative=True, append=True)
+    df_intraday.ta.percent_return(cumulative=True, append=True)
 
 print(df_intraday)
 
-df_intraday.to_csv(ticker_output_intraday)
+df_intraday.to_csv(intraday_output)
 
 
 
 ### END
+print("\n  --- DONE ---\n")
 quit()
 
 ## OLD CODE BELOW HERE ###
