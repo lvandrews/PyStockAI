@@ -6,13 +6,39 @@ This is merely a project to help me better learn python, not an actual useful ut
 Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
 
 ## 2022-12-04 UPDATE:
-### retrieve_stock_data.py
+### retrieve_stock_data.py (v0.1)
 * Current functions:
-  *
+  * Obtain historical stock data and store for analysis (only av is working right now, some commands don't yet work).
+    * -h, --help:       Show help message and exit
+    * -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
+    * -s, --source:     Select data source; av = alphavantage, y1 = yahoo_fin, y2 = yFinance; default = av)
+    * -b, --begin_date: Beginning date for analysis set (e.g. 2021-04-20, default = one year ago from present date)
+    * -a, --all_time:   Use all available data (supersedes -b)
+    * -d, --data_type:  Data type to retrieve (daily, daily_adj, intraday or intraday_ext; default=intraday)
+    * -n, --interval:   Time interval between data points (intraday only; 1min, 5min, 15min, 30min, 60min); default=5min)
+    * -v, --version:    Show program version
+    * -V, --verbose:    Increase output verbosity
 
+* Recent changes:
+  * Changed -d default to daily_adj due to change in paywall at alphavantage
+  * Built in column renaming from raw output from alphavantage (need to also do for yahoo sources)
 
+* To-do list:
  * Fix yfinance and yahoo_fin options for data retrieval as alphavantage seems to have a paywall with moving target
- * basic_analysis.py
+
+
+### basic_analysis.py (v0.1)
+* Cuurent functions:
+  * Add technical indicator values to existing data from retrieve_stock_data.py. Requires current data available. First run retrieve_stock_data.py for ticker of interest.
+    * -h, --help:       Show help message and exit
+    * -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
+    * -v, --version:    Show program version
+    * -V, --verbose:    Increase output verbosity
+
+* Recent changes:
+  * Improved file handling:
+    * Supplied ticker symbol (-t) causes program to look for available data in ticker abbreviation subdirectory, report on age of available files, select most recent between daily or daily_adj (use only one).
+
    * Copy latest data obtained by retrieve_stock_data.py
    * Calculate technical indicators
      * SMA (Simple Moving Average -- Automatically calculate for SMA = 5, 10, 20, 30, 60, 200) -- talib function MA or SMA
@@ -26,6 +52,8 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
      * AD (Chaikin A/D Line) -- talib function
      * DX (Directional Movement Index) -- talib function
    * Add buy/sell function, test function over time, calculate best success strategy
+
+
  * tensor_analysis.py -- NOT YET BUILT --
    * Copy latest data from basic_analysis.py
    * Train/run model using different strategies
