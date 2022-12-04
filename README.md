@@ -9,15 +9,15 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
 ### retrieve_stock_data.py (v0.1)
 * Current functions:
   * Obtain historical stock data and store for analysis (only av is working right now, some commands don't yet work).
-    * -h, --help:       Show help message and exit
-    * -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
-    * -s, --source:     Select data source; av = alphavantage, y1 = yahoo_fin, y2 = yFinance; default = av)
-    * -b, --begin_date: Beginning date for analysis set (e.g. 2021-04-20, default = one year ago from present date)
-    * -a, --all_time:   Use all available data (supersedes -b)
-    * -d, --data_type:  Data type to retrieve (daily, daily_adj, intraday or intraday_ext; default=intraday)
-    * -n, --interval:   Time interval between data points (intraday only; 1min, 5min, 15min, 30min, 60min); default=5min)
-    * -v, --version:    Show program version
-    * -V, --verbose:    Increase output verbosity
+    -h, --help:       Show help message and exit
+    -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
+    -s, --source:     Select data source; av = alphavantage, y1 = yahoo_fin, y2 = yFinance; default = av)
+    -b, --begin_date: Beginning date for analysis set (e.g. 2021-04-20, default = one year ago from present date)
+    -a, --all_time:   Use all available data (supersedes -b)
+    -d, --data_type:  Data type to retrieve (daily, daily_adj, intraday or intraday_ext; default=intraday)
+    -n, --interval:   Time interval between data points (intraday only; 1min, 5min, 15min, 30min, 60min); default=5min)
+    -v, --version:    Show program version
+    -V, --verbose:    Increase output verbosity
 
 * Recent changes:
   * Changed -d default to daily_adj due to change in paywall at alphavantage
