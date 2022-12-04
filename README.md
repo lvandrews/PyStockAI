@@ -100,16 +100,17 @@ To-do list:
  * Decide where output should go
 
 ### tensor_analysis.py -- NOT YET BUILT --
-   * Copy latest data from basic_analysis.py
-   * Train/run model using different strategies
-   * Predict next 1-10 days with confidence interval
-   * Add buy/sell function, test function over time, calculate best success strategy
- * hmm_analysis.py -- NOT YET BUILT --
-   * Similar analysis as in tenstor_analysis.py
-   * Use HMM approach
+ * Copy latest data from basic_analysis.py
+ * Train/run model using different strategies
+ * Predict next 1-10 days with confidence interval
+ * Add buy/sell function, test function over time, calculate best success strategy
+
+### hmm_analysis.py -- NOT YET BUILT --
+ * Similar analysis as in tenstor_analysis.py
+ * Use HMM approach
 
 
- * Build monitor_analysis.py
+### monitor_analysis.py -- NOT YET BUILT --
    * Maintains analyses on current list of stock symbols
    * Uploads latest data to private website
    * Can run from cron
