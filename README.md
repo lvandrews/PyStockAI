@@ -134,7 +134,7 @@ To-do list:
  1. Install python3 (apt, yum, etc)
  1. Install tensorflow and keras (see above about compiling for CPU)
      * Need to add directions in dependencies directory
- 1. Install ta-lib dependencies in dependencies directory, follow instructions in associated README files
+ 1. Install ta-lib dependencies in dependencies directory, follow instructions in PyStockAI/dependencies/README.ta-lib-0.4.0-src.txt
  1. Install python requirements with pip `pip install -r requirements`
  
 ## Obtain and analyze data
