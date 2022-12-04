@@ -23,6 +23,14 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
     -v, --version:    Show program version
     -V, --verbose:    Increase output verbosity
   ```
+Note:
+ * Use of source "av" requires user to obtain API key from https://www.alphavantage.co/
+ * Free tier API available
+ * Store API key in "creds.json" file within PyStockAI/scripts/
+ ```creds.json file contents:
+ 
+ {"av_api_key":"API_KEY_HERE"}
+ ```
 
 Recent changes:
  * Changed -d default to daily_adj due to change in paywall at alphavantage
