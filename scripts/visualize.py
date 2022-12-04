@@ -43,8 +43,8 @@ parser = argparse.ArgumentParser(description=desctext)
 parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar='', required=True)
 parser.add_argument("-s", "--start", help="Start date (e.g. 2020-04-20, default = a year ago)", type=str, metavar='', default=year_ago)
 parser.add_argument("-e", "--end", help="End date (e.g. 2021-04-20, default = today)", type=str, metavar='', default=today)
-parser.add_argument("-v", "--version", help="show program version", action="version", version="%(prog)s 0.1")
-parser.add_argument("-V", "--verbose", help="increase output verbosity", action="store_true")
+parser.add_argument("-v", "--version", help="Show program version", action="version", version="%(prog)s 0.1")
+parser.add_argument("-V", "--verbose", help="Increase output verbosity", action="store_true")
 
 
 # Print help if no arguments supplied
