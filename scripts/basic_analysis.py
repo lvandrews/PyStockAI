@@ -38,9 +38,9 @@ scriptdir = os.path.join(repodir,"scripts")
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
 parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar="", required=True)
-#parser.add_argument("-s", "--source", help="Select data source; default=AlphaVantage", choices=["alphavantage", "yahoo"], type=str, metavar="", default="alphavantage")
-parser.add_argument("-v", "--version", help="show program version", action="version", version=vers)
-parser.add_argument("-V", "--verbose", help="increase output verbosity", action="store_true")
+parser.add_argument("-s", "--strategy", help="Select strategy; default=ALL", choices=["ALL", "buy", "sell"], type=str, metavar="", default="ALL")
+parser.add_argument("-v", "--version", help="Show program version", action="version", version=vers)
+parser.add_argument("-V", "--verbose", help="Increase output verbosity", action="store_true")
 
 # Print help if no arguments supplied
 if len(sys.argv) < 2:
@@ -55,8 +55,10 @@ if args.verbose:
 # Parse inputs and set ticker to uppercase if lowercase was entered
 ticker = args.ticker.upper()
 ticker_datadir = os.path.join(datadir,ticker,"")
+strategy = args.strategy
+print("\nBASIC ANALYSIS for:", ticker, "...\n", date_now_notime, "\n")
 
-# Check for most recent daily or daily_adj file (add intraday later)
+# Check for most recent daily or daily_adj file
 lof_daily = glob.glob(os.path.join(ticker_datadir,"",f"{ticker}_*_daily.csv"))
 if len(lof_daily) > 0:
     daily_newest = max(lof_daily)
@@ -83,6 +85,15 @@ else:
     print("No daily_adj data found...")
     xx = xx + 0
 
+if xx == 0:
+    print("\nNo daily data found for", ticker, ". Exiting...\n")
+    quit()
+
+if xx == 2:
+    daily_data = max(daily_newest,daily_adj_newest)
+    daily_data_fname = os.path.basename(daily_data) 
+
+# Check if intraday exists
 lof_intraday = glob.glob(os.path.join(ticker_datadir,"",f"{ticker}_*_intraday.csv"))
 if len(lof_intraday) > 0:
     intraday_newest = max(lof_intraday)
@@ -90,61 +101,19 @@ if len(lof_intraday) > 0:
     intraday_newest_age = (d0 - intraday_newest_cdate)
     intraday_fname = os.path.basename(intraday_newest)
     print("Latest intraday data file is", intraday_newest_age.days, "days old:", intraday_fname)
+    intraday_data = intraday_newest
+    intraday_data_fname = os.path.basename(intraday_data)
 else:
     print("No intraday data found...")
+    intraday_data_fname = "NONE"
 
-if xx == 0:
-    print("\nNo daily data found for", ticker, ". Exiting...\n")
-    quit()
-
-if xx == 2:
-    daily_data = max(daily_newest,daily_adj_newest)
-
-daily_data_fname = os.path.basename(daily_data)    
-print("\nDaily data source:", daily_data_fname)
-
-#ticker_input_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily.csv")
-#ticker_input_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday.csv")
+# Report output:
+print("\nDaily data source:   ", daily_data_fname, "\nIntraday data source:", intraday_data_fname, "\nStrategy:", strategy, "\n")
 
 
-
-
-
-
-
-
-### END
+# Define available strategies
+# Use ALL strategy for now (built-in to ta-lib). Refine to custom strategy in the future to conserve processing time and storage space.
 quit()
-
-
-# Check that inputs exist -- consider moving as def to util.py
-if not os.path.isfile(ticker_input_daily):
-    most_recent_daily = "MISSING"
-    print("Missing input file:",ticker_input_daily)
-    print("\nExiting\n")
-    quit()
-else:
-    most_recent_daily = "AVAILABLE"
-    
-
-if not os.path.isfile(ticker_input_intraday):
-    most_recent_intraday = "MISSING"
-    print("Missing input file:",ticker_input_intraday)
-    print("\nExiting\n")
-    quit()
-else:
-    most_recent_intraday = "AVAILABLE"
-
-print("\nInput files exist:\n",ticker_input_daily,"\n",ticker_input_intraday,"\n")
-
-# Copy inputs to basic analysis files
-ticker_output_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
-ticker_output_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv")
-#shutil.copyfile(ticker_input_daily,ticker_output_daily)
-#shutil.copyfile(ticker_input_intraday,ticker_output_intraday)
-
-
-# Use ALL strategy for now. Refine to custom strategy in the future to conserve processing time and storage space.
 # Custom Strategy definition
 CustomStrategy = ta.Strategy(
     name="Momo and Volatility",
@@ -158,6 +127,52 @@ CustomStrategy = ta.Strategy(
         {"kind": "sma", "close": "volume", "length": 20, "prefix": "VOLUME"},
     ]
 )
+
+# Create dataframes from inputs and add technical indicators, write to outputs
+# Daily
+df_daily = pd.DataFrame()
+df_daily = pd.read_csv(ticker_input_daily)
+
+#df_daily.ta.strategy(CustomStrategy)
+df_daily.ta.strategy(ta.AllStrategy)
+#df_daily.ta.log_return(cumulative=True, append=True)
+#df_daily.ta.percent_return(cumulative=True, append=True)
+
+print(df_daily)
+
+df_daily.to_csv(ticker_output_daily)
+
+# Intraday
+df_intraday = pd.DataFrame()
+df_intraday = pd.read_csv(ticker_input_intraday)
+df_intraday.rename(columns={'1. open': 'Open', '2. high': 'High', '3. low': 'Low', '4. close': 'Close', '5. volume': 'Volume'}, inplace=True)
+df_intraday.set_index(pd.DatetimeIndex(df_daily['date']), inplace=True)
+df_intraday.ta.strategy(ta.AllStrategy)
+df_intraday.ta.log_return(cumulative=True, append=True)
+df_intraday.ta.percent_return(cumulative=True, append=True)
+
+print(df_intraday)
+
+df_intraday.to_csv(ticker_output_intraday)
+
+
+
+### END
+quit()
+
+## OLD CODE BELOW HERE ###
+
+#ticker_input_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily.csv")
+#ticker_input_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday.csv")
+
+# Copy inputs to basic analysis files
+ticker_output_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
+ticker_output_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv")
+#shutil.copyfile(ticker_input_daily,ticker_output_daily)
+#shutil.copyfile(ticker_input_intraday,ticker_output_intraday)
+
+
+
 
 # Create dataframes from inputs and add technical indicators, write to outputs
 # Daily
@@ -186,14 +201,6 @@ df_intraday.ta.percent_return(cumulative=True, append=True)
 print(df_intraday)
 
 df_intraday.to_csv(ticker_output_intraday)
-
-
-
-
-
-
-
-
 
 
 
