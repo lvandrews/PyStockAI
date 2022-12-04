@@ -91,8 +91,9 @@ if xx == 0:
 
 if xx == 2:
     daily_data = max(daily_newest,daily_adj_newest)
-    daily_data_fname = os.path.basename(daily_data)
-    daily_output = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
+
+daily_data_fname = os.path.basename(daily_data)
+daily_output = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
 
 # Check if intraday exists
 lof_intraday = glob.glob(os.path.join(ticker_datadir,"",f"{ticker}_*_intraday.csv"))
