@@ -167,54 +167,7 @@ print(df_intraday)
 df_intraday.to_csv(intraday_output)
 
 
-
-### END
+### REORT END
 print("\n  --- DONE ---\n")
 quit()
 
-## OLD CODE BELOW HERE ###
-
-#ticker_input_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily.csv")
-#ticker_input_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday.csv")
-
-# Copy inputs to basic analysis files
-ticker_output_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
-ticker_output_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv")
-#shutil.copyfile(ticker_input_daily,ticker_output_daily)
-#shutil.copyfile(ticker_input_intraday,ticker_output_intraday)
-
-
-
-
-# Create dataframes from inputs and add technical indicators, write to outputs
-# Daily
-df_daily = pd.DataFrame()
-df_daily = pd.read_csv(ticker_input_daily)
-df_daily.rename(columns={'1. open': 'Open', '2. high': 'High', '3. low': 'Low', '4. close': 'Close', '5. volume': 'Volume'}, inplace=True)
-df_daily.set_index(pd.DatetimeIndex(df_daily['date']), inplace=True)
-#df_daily.ta.strategy(CustomStrategy)
-df_daily.ta.strategy(ta.AllStrategy)
-#df_daily.ta.log_return(cumulative=True, append=True)
-#df_daily.ta.percent_return(cumulative=True, append=True)
-
-print(df_daily)
-
-df_daily.to_csv(ticker_output_daily)
-
-# Intraday
-df_intraday = pd.DataFrame()
-df_intraday = pd.read_csv(ticker_input_intraday)
-df_intraday.rename(columns={'1. open': 'Open', '2. high': 'High', '3. low': 'Low', '4. close': 'Close', '5. volume': 'Volume'}, inplace=True)
-df_intraday.set_index(pd.DatetimeIndex(df_daily['date']), inplace=True)
-df_intraday.ta.strategy(ta.AllStrategy)
-df_intraday.ta.log_return(cumulative=True, append=True)
-df_intraday.ta.percent_return(cumulative=True, append=True)
-
-print(df_intraday)
-
-df_intraday.to_csv(ticker_output_intraday)
-
-
-
-
-quit()
