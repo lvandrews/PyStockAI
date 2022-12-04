@@ -7,13 +7,11 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
 
 ## 2022-12-04 UPDATE:
 ### retrieve_stock_data.py (v0.1)
-* Current functions:
-  * Obtain historical stock data and store for analysis (only av is working right now, some commands don't yet work).
-```usage: retrieve_stock_data.py [-h] -t  [-s] [-b] [-a] [-d] [-n] [-v] [-V]
+  ```usage: retrieve_stock_data.py [-h] -t  [-s] [-b] [-a] [-d] [-n] [-v] [-V]
 
-retrieve_stock_data.py: Obtain historical stock data and store for analysis.
+  retrieve_stock_data.py: Obtain historical stock data and store for analysis.
 
-optional arguments:
+  optional arguments:
 
     -h, --help:       Show help message and exit
     -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
