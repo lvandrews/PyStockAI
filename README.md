@@ -49,23 +49,57 @@ To-do list:
 Recent changes:
  * Improved file handling:
    * Supplied ticker symbol (-t) causes program to look for available data in ticker abbreviation subdirectory, report on age of available files, select most recent between daily or daily_adj (use only one).
+ * Copies latest data obtained by retrieve_stock_data.py
+ * Calculates all technical indicators in lib_ta
 
-   * Copy latest data obtained by retrieve_stock_data.py
-   * Calculate technical indicators
-     * SMA (Simple Moving Average -- Automatically calculate for SMA = 5, 10, 20, 30, 60, 200) -- talib function MA or SMA
-     * EMA (Exponential Moving Average) -- talib function
-     * MACD (Moving Average Convergence/Divergence) -- talib function
-     * RSI (Relative Strength Index) -- talib function
-     * STOCH (Stochastic Oscillator) -- talib function
-     * STOCHRSI (Stochastic Relative Strength Index) -- talib function
-     * ADX (Average Directional Movement Index) -- talib function
-     * BBANDS (Bollinger Bands) -- talib function
-     * AD (Chaikin A/D Line) -- talib function
-     * DX (Directional Movement Index) -- talib function
-   * Add buy/sell function, test function over time, calculate best success strategy
+To-do list:
+ * Test available technical indicators for utility (as automated function)
+ * Use results of above test to distill technical indicator calculations to save space, time
+ * Add buy/sell function, test function over time, calculate best success strategy
 
+### visualize.py (v0.1)
+  ```usage: visualize.py [-h] -t  [-s] [-e] [-v] [-V]
 
- * tensor_analysis.py -- NOT YET BUILT --
+  visualize.py: Generate visualizations from analysis of stock data.
+
+  optional arguments:
+    -h, --help      show this help message and exit
+    -t , --ticker   Ticker abbreviation (e.g. AMZN, required)
+    -s , --start    Start date (e.g. 2020-04-20, default = a year ago)
+    -e , --end      End date (e.g. 2021-04-20, default = today)
+    -v, --version   show program version
+    -V, --verbose   increase output verbosity
+  ```
+Recent changes:
+ * none
+ 
+To-do list:
+ * Useful visualizations for output from basic_analysis.py
+ * Allow output to private website
+ * Multiple plots per screen
+ * Date of analysis, raw data used on screen
+ * Useful calculated values on screen
+ * Change name of script to something more useful
+
+### make_html.py (v0.1)
+  ```usage: make_html.py [-h] -t  [-v] [-V]
+
+  make_html.py: Build or update html page for viewing stock data.
+
+  optional arguments:
+    -h, --help      show this help message and exit
+    -t , --ticker   Ticker abbreviation (e.g. AMZN, required)
+    -v, --version   show program version
+    -V, --verbose   increase output verbosity
+  ```
+Recent changes:
+ * none
+
+To-do list:
+ * Make output appealing
+ * Decide where output should go
+
+### tensor_analysis.py -- NOT YET BUILT --
    * Copy latest data from basic_analysis.py
    * Train/run model using different strategies
    * Predict next 1-10 days with confidence interval
@@ -73,13 +107,8 @@ Recent changes:
  * hmm_analysis.py -- NOT YET BUILT --
    * Similar analysis as in tenstor_analysis.py
    * Use HMM approach
- * Update visualize.py
-   * Visualizations for each of the above
-   * Allow output to private website
-   * Multiple plots per screen
-   * Date of analysis, raw data used on screen
-   * Useful calculated values on screen
-   * Change name of script to something more useful
+
+
  * Build monitor_analysis.py
    * Maintains analyses on current list of stock symbols
    * Uploads latest data to private website
