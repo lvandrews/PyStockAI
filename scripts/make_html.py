@@ -39,8 +39,8 @@ outdir = os.path.join(repodir,"docs")
 parser = argparse.ArgumentParser(description=desctext)
 parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar="", required=True)
 #parser.add_argument("-s", "--source", help="Select data source; default=AlphaVantage", choices=["alphavantage", "yahoo"], type=str, metavar="", default="alphavantage")
-parser.add_argument("-v", "--version", help="show program version", action="version", version=vers)
-parser.add_argument("-V", "--verbose", help="increase output verbosity", action="store_true")
+parser.add_argument("-v", "--version", help="Show program version", action="version", version=vers)
+parser.add_argument("-V", "--verbose", help="Increase output verbosity", action="store_true")
 
 # Print help if no arguments supplied
 if len(sys.argv) < 2:
