@@ -38,7 +38,7 @@ Recent changes:
 
 To-do list:
  * Fix yfinance and yahoo_fin options for data retrieval as alphavantage seems to have a paywall with moving target
- * Consider adding logger function using module such as loguru which may enable automatic user notification when a script hits an error -- particularly useful if using cron to keep analysis up to date.
+ * Consider adding logger function using module such as [loguru](https://github.com/Delgan/loguru) which may enable automatic user notification when a script hits an error -- particularly useful if using cron to keep analysis up to date.
 
 ### basic_analysis.py (v0.1)
   ```usage: basic_analysis.py [-h] -t  [-v] [-V]
