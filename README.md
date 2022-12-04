@@ -5,7 +5,7 @@ This is merely a project to help me better learn python, not an actual useful ut
 
 Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
 
-## 2022-12-04 UPDATE:
+## 2022-12-04 UPDATES:
 ### retrieve_stock_data.py (v0.1)
   ```usage: retrieve_stock_data.py [-h] -t  [-s] [-b] [-a] [-d] [-n] [-v] [-V]
 
@@ -46,9 +46,9 @@ To-do list:
     -V, --verbose:    Increase output verbosity
   ```
 
-* Recent changes:
-  * Improved file handling:
-    * Supplied ticker symbol (-t) causes program to look for available data in ticker abbreviation subdirectory, report on age of available files, select most recent between daily or daily_adj (use only one).
+Recent changes:
+ * Improved file handling:
+   * Supplied ticker symbol (-t) causes program to look for available data in ticker abbreviation subdirectory, report on age of available files, select most recent between daily or daily_adj (use only one).
 
    * Copy latest data obtained by retrieve_stock_data.py
    * Calculate technical indicators
