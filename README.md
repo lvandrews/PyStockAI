@@ -148,10 +148,11 @@ To-do list:
 ## Obtain and analyze data
  1. Run retrieve_stock_data.py to obtain data for one particular stock
  1. Run basic_model.py to build out technical indicators
- 1. Run tensor_analysis.py to build out ML-based predictions
- 1. Run hmm_analysis.py to build out HMM-based predictions (script not yet built)
+ 1. Run tensor_analysis.py to build out ML-based predictions (script not yet built, optional)
+ 1. Run other ML-based options if I get around to making them (scripts not yet build, optional)
+ 1. Run hmm_analysis.py to build out HMM-based predictions (script not yet built, optional)
  1. Run visualize.py for graphical output and technical details
- 1. Run monitor_analysis.py to update all symbols in analysis list (script not yet built)
+ 1. Run monitor_analysis.py to update all symbols in analysis list (script not yet built, optional)
      * Need to build list of symbols and maintenance scripts
- 1. Observe output on private website (need to determine how to do this...)
+ 1. Observe output on private website (script not yet built, optional)
  
