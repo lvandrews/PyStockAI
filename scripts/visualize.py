@@ -20,6 +20,8 @@ import datetime as dt
 from os.path import dirname, abspath
 import plotly.graph_objects as go
 import pandas as pd
+import matplotlib.pyplot as mplt
+import seaborn as sbn
 
 # Date strings
 today=dt.date.today()
@@ -46,7 +48,6 @@ parser.add_argument("-e", "--end", help="End date (e.g. 2021-04-20, default = to
 parser.add_argument("-v", "--version", help="Show program version", action="version", version="%(prog)s 0.1")
 parser.add_argument("-V", "--verbose", help="Increase output verbosity", action="store_true")
 
-
 # Print help if no arguments supplied
 if len(sys.argv) < 2:
     parser.print_help()
@@ -61,13 +62,46 @@ args = parser.parse_args()
 if args.verbose:
     print("Verbosity turned on")
 
-# Edit below section to check for basic analysis files or provide feedback to run basic_analysis.py first
-###    
 # Parse inputs and set ticker to uppercase if lowercase was entered
 ticker = args.ticker.upper()
 ticker_datadir = os.path.join(datadir,ticker,"")
-ticker_input_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily.csv")
-ticker_input_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday.csv")
+daily_basic_analysis = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
+if os.path.isfile(daily_basic_analysis):
+    daily_basic_analysis_fname = os.path.basename(daily_basic_analysis)
+else:
+    daily_basic_analysis_fname = "MISSING. Check if inputs exist."
+    
+intraday_basic_analysis = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv")
+if os.path.isfile(intraday_basic_analysis):
+    intraday_basic_analysis_fname = os.path.basename(intraday_basic_analysis)
+else:
+    intraday_basic_analysis_fname = "MISSING. Check if inputs exist."
+
+# Report output:
+print("\nDaily basic analysis source:   ", daily_basic_analysis_fname, "\nIntraday basic analysis source:", intraday_basic_analysis_fname, "\n")
+
+# Generate output if daily_basic_analysis exists
+if os.path.isfile(daily_basic_analysis):
+    print("Generating visualizations of", ticker, "daily basic analysis input...\n")
+    df_daily = pd.DataFrame()
+    df_daily = pd.read_csv(daily_basic_analysis)
+
+
+
+quit()
+# Generate output if intraday_basic_analysis exists
+if os.path.isfile(intraday_basic_analysis):
+    df_intraday = pd.DataFrame()
+    df_intraday = pd.read_csv(intraday_basic_analysis)
+
+
+
+### END
+print("\n  --- DONE ---\n")
+quit()
+
+## OLD CODE BELOW HERE ###
+
 
 # Check that inputs exist -- consider moving as def to util.py
 if not os.path.isfile(ticker_input_daily):
