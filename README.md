@@ -24,11 +24,11 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
     -V, --verbose:    Increase output verbosity
   ```
 
-* Recent changes:
-  * Changed -d default to daily_adj due to change in paywall at alphavantage
-  * Built in column renaming from raw output from alphavantage (need to also do for yahoo sources)
+Recent changes:
+ * Changed -d default to daily_adj due to change in paywall at alphavantage
+ * Built in column renaming from raw output from alphavantage (need to also do for yahoo sources)
 
-* To-do list:
+To-do list:
  * Fix yfinance and yahoo_fin options for data retrieval as alphavantage seems to have a paywall with moving target
 
 
