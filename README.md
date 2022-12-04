@@ -33,12 +33,18 @@ To-do list:
 
 
 ### basic_analysis.py (v0.1)
-* Cuurent functions:
-  * Add technical indicator values to existing data from retrieve_stock_data.py. Requires current data available. First run retrieve_stock_data.py for ticker of interest.
-    * -h, --help:       Show help message and exit
-    * -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
-    * -v, --version:    Show program version
-    * -V, --verbose:    Increase output verbosity
+  ```usage: basic_analysis.py [-h] -t  [-v] [-V]
+
+  basic_analysis.py: Add technical indicator values to existing data from retrieve_stock_data.py.
+  Requires current data available. First run retrieve_stock_data.py for ticker of interest.
+
+  optional arguments:
+
+    -h, --help:       Show help message and exit
+    -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
+    -v, --version:    Show program version
+    -V, --verbose:    Increase output verbosity
+  ```
 
 * Recent changes:
   * Improved file handling:
