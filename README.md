@@ -5,10 +5,14 @@ This is merely a project to help me better learn python, not an actual useful ut
 
 Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
 
-## To do list (2022-11-04):
- * Add yahoo finance to retrieve_stock_data.py -- ON HOLD --
- * Add some technical indicators to alpha_vantage option in retrieve_stock_data.py -- CALCULATING FIRST TO MINIMIZE API CALLS --
- * Build basic_analysis.py
+## 2022-12-04 UPDATE:
+### retrieve_stock_data.py
+* Current functions:
+  *
+
+
+ * Fix yfinance and yahoo_fin options for data retrieval as alphavantage seems to have a paywall with moving target
+ * basic_analysis.py
    * Copy latest data obtained by retrieve_stock_data.py
    * Calculate technical indicators
      * SMA (Simple Moving Average -- Automatically calculate for SMA = 5, 10, 20, 30, 60, 200) -- talib function MA or SMA
@@ -22,12 +26,12 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
      * AD (Chaikin A/D Line) -- talib function
      * DX (Directional Movement Index) -- talib function
    * Add buy/sell function, test function over time, calculate best success strategy
- * Build tensor_analysis.py
+ * tensor_analysis.py -- NOT YET BUILT --
    * Copy latest data from basic_analysis.py
    * Train/run model using different strategies
    * Predict next 1-10 days with confidence interval
    * Add buy/sell function, test function over time, calculate best success strategy
- * Build hmm_analysis.py
+ * hmm_analysis.py -- NOT YET BUILT --
    * Similar analysis as in tenstor_analysis.py
    * Use HMM approach
  * Update visualize.py
