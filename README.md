@@ -58,7 +58,7 @@ Recent changes:
  * Improved file handling:
    * Supplied ticker symbol (-t) causes program to look for available data in ticker abbreviation subdirectory, report on age of available files, select most recent between daily or daily_adj (use only one).
  * Copies latest data obtained by retrieve_stock_data.py
- * Calculates all technical indicators in lib_ta
+ * Calculates all technical indicators in ta-lib
 
 To-do list:
  * Test available technical indicators for utility (as automated function)
@@ -140,9 +140,9 @@ To-do list:
 ## Installing
  1. Clone repo `git clone https://github.com/lvandrews/PyStockAI.git`
  1. Install python3 (apt, yum, etc)
- 1. Install tensorflow and keras (see above about compiling for CPU)
+ 1. Install [tensorflow](https://www.tensorflow.org/) and [keras](https://keras.io/) (see above about compiling for CPU)
      * Need to add directions in dependencies directory
- 1. Install ta-lib dependencies in dependencies directory, follow instructions in PyStockAI/dependencies/README.ta-lib-0.4.0-src.txt
+ 1. Install [ta-lib](https://github.com/mrjbq7/ta-lib) dependencies in dependencies directory, follow instructions in [PyStockAI/dependencies/README.ta-lib-0.4.0-src.txt](https://github.com/lvandrews/PyStockAI/blob/main/dependencies/README.ta-lib-0.4.0-src.txt)
  1. Install python requirements with pip `pip install -r requirements`
  
 ## Obtain and analyze data
