@@ -50,6 +50,7 @@ To-do list:
 
     -h, --help:       Show help message and exit
     -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
+    -s, --strategy:   Select strategy; determines which indicators to use (default is ALL)
     -v, --version:    Show program version
     -V, --verbose:    Increase output verbosity
   ```
