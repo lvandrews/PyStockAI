@@ -114,8 +114,7 @@ if source == "av":
     elif dtype == 'intraday':
         df.rename(columns={'date': 'Date', '1. open': 'Open', '2. high': 'High', '3. low': 'Low', '4. close': 'Close', '5. volume': 'Volume'}, inplace=True)
     
-    # Write output to file    
-    df.set_index(pd.DatetimeIndex(df['Date']), inplace=True)
+    # Write output to file
     df.to_csv(ticker_data_filename)
     print(df)
 
