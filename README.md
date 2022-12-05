@@ -14,7 +14,7 @@ Built in Linux Mint 20.1 within a VM on a mini PC with no CUDA cores.
   optional arguments:
 
     -h, --help:       Show help message and exit
-    -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
+    -t, --ticker:     Ticker abbreviation (e.g. DOW, required)
     -s, --source:     Select data source; av = alphavantage, y1 = yahoo_fin, y2 = yFinance; default = av)
     -b, --begin_date: Beginning date for analysis set (e.g. 2021-04-20, default = one year ago from present date)
     -a, --all_time:   Use all available data (supersedes -b)
@@ -49,7 +49,7 @@ To-do list:
   optional arguments:
 
     -h, --help:       Show help message and exit
-    -t, --ticker:     Ticker abbreviation (e.g. AMZN, required)
+    -t, --ticker:     Ticker abbreviation (e.g. DOW, required)
     -s, --strategy:   Select strategy; determines which indicators to use (default is ALL)
     -v, --version:    Show program version
     -V, --verbose:    Increase output verbosity
@@ -73,7 +73,7 @@ To-do list:
 
   optional arguments:
     -h, --help      show this help message and exit
-    -t , --ticker   Ticker abbreviation (e.g. AMZN, required)
+    -t , --ticker   Ticker abbreviation (e.g. DOW, required)
     -s , --start    Start date (e.g. 2020-04-20, default = a year ago)
     -e , --end      End date (e.g. 2021-04-20, default = today)
     -v, --version   show program version
@@ -97,7 +97,7 @@ To-do list:
 
   optional arguments:
     -h, --help      show this help message and exit
-    -t , --ticker   Ticker abbreviation (e.g. AMZN, required)
+    -t , --ticker   Ticker abbreviation (e.g. DOW, required)
     -v, --version   show program version
     -V, --verbose   increase output verbosity
   ```

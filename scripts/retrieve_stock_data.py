@@ -40,7 +40,7 @@ av_creds = os.path.join(scriptdir,"creds.json")
 
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
-parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar="", required=True)
+parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. DOW, required)", type=str, metavar="", required=True)
 parser.add_argument("-s", "--source", help="Select data source; default = y1; y1 = yahoo_fin, y2 = yFinance", choices=["av", "y1", "y2"], type=str, metavar="", default="av")
 parser.add_argument("-b", "--begin_date", help="Beginning date for analysis set (e.g. 2021-04-20, default = one year ago from present date)", type=str, metavar='', default=year_ago)
 parser.add_argument("-a", "--all_time", help="Use all available data (supersedes -b)", action="store_true")

@@ -37,7 +37,7 @@ scriptdir = os.path.join(repodir,"scripts")
 
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
-parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar="", required=True)
+parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. DOW, required)", type=str, metavar="", required=True)
 parser.add_argument("-s", "--strategy", help="Select strategy; default=ALL", choices=["ALL", "custom"], type=str, metavar="", default="ALL")
 parser.add_argument("-v", "--version", help="Show program version", action="version", version=vers)
 parser.add_argument("-V", "--verbose", help="Increase output verbosity", action="store_true")
