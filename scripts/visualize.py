@@ -15,17 +15,19 @@
 #)
 
 # Parse inputs or provide help
-import argparse, sys, json, time, os, pprint
+import argparse, sys, time, os, pprint
 import datetime as dt
 from os.path import dirname, abspath
 import plotly.graph_objects as go
 import pandas as pd
-import matplotlib.pyplot as mplt
-import seaborn as sbn
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Date strings
 today=dt.date.today()
 year_ago=today - dt.timedelta(days=365)
+month_ago=today - dt.timedelta(days=30)
 date_now = time.strftime("%Y-%m-%d_%H-%M-%S")
 date_now_notime = time.strftime("%Y-%m-%d")
 dt_string = time.strftime("%b-%d-%Y %I:%M:%S %p")
@@ -42,7 +44,7 @@ scriptdir = os.path.join(repodir,"scripts")
 
 # Initialize parser
 parser = argparse.ArgumentParser(description=desctext)
-parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. AMZN, required)", type=str, metavar='', required=True)
+parser.add_argument("-t", "--ticker", help="Ticker abbreviation (e.g. DOW, required)", type=str, metavar='', required=True)
 parser.add_argument("-s", "--start", help="Start date (e.g. 2020-04-20, default = a year ago)", type=str, metavar='', default=year_ago)
 parser.add_argument("-e", "--end", help="End date (e.g. 2021-04-20, default = today)", type=str, metavar='', default=today)
 parser.add_argument("-v", "--version", help="Show program version", action="version", version="%(prog)s 0.1")
@@ -80,13 +82,60 @@ else:
 # Report output:
 print("\nDaily basic analysis source:   ", daily_basic_analysis_fname, "\nIntraday basic analysis source:", intraday_basic_analysis_fname, "\n")
 
+# Initialize visualizers
+plt.style.use('classic')
+#sns.set()
+
+yag = pd.to_datetime(year_ago, format='%Y-%m-%d')
+mag = pd.to_datetime(month_ago, format='%Y-%m-%d')
+#print(yag)
+#quit()
+
 # Generate output if daily_basic_analysis exists
 if os.path.isfile(daily_basic_analysis):
     print("Generating visualizations of", ticker, "daily basic analysis input...\n")
     df_daily = pd.DataFrame()
     df_daily = pd.read_csv(daily_basic_analysis)
+    #df_daily.set_index(pd.DatetimeIndex(df_daily['Date']), inplace=True)
+    df_daily['Date'] = pd.to_datetime(df_daily['Date'], format='%Y-%m-%d')
+    date = df_daily['Date']
+    values = df_daily[['Open','Close','High','Low']]
+    #df_daily_1yr = df_daily[df_daily['Date'] > date_now_notime - pd.Timedelta('365')]
+    #print(df_daily_1yr)
+    basic_output_sns = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_visualization_sns.png")
+    basic_output_plt = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_visualization_plt.png")
+    #df1 = pd.DataFrame(df_daily, df_daily.index, ["Open", "Close", "High", "Low"])
+    #ax = sns.scatterplot(data=df1)
+    #p01 = df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(figsize=(8,8))
+    #df_daily_1yr = df_daily.loc[(df_daily['Date'] >= year_ago) & (df_daily['Date'] <= date_now_notime)]
+    #df_daily_1yr = df_daily.query("Date >= yag and Date < = date_now_notime")
+    
+    fig, axs = plt.subplots(figsize=(8, 6))
+    axs.set(ylabel="Value ($)",xlabel="Date")
+    axs.plot(date, values)
+    plt.xlim(mag)
+    plt.ylim(175,275)
+    plt.xticks(rotation = 45)
+    plt.legend(values, loc='upper left')
+    #ax.plot(df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(figsize=(8,8)), df_daily[['Date']])
+#    axs[0, 0].plot(df_daily[['Open','Close','High','Low']].set_index('Date').plot(figsize=(8,8)), df_daily[['Date']])
+#    axs[0, 0].set_title('Axis [0, 0]')
+#    axs[0, 1].plot(x, y, 'tab:orange')
+#    axs[0, 1].set_title('Axis [0, 1]')
+#    axs[1, 0].plot(x, -y, 'tab:green')
+#    axs[1, 0].set_title('Axis [1, 0]')
+#   axs[1, 1].plot(x, -y, 'tab:red')
+#    axs[1, 1].set_title('Axis [1, 1]')
 
-
+    #for ax in axs.flat:
+        #ax.set(xlabel='x-label', ylabel='y-label')
+    
+    #p01 = df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(figsize=(8,8))
+    #p01 = plt.ylabel('Value ($)')
+    #p01 = plt.xlim(yag)
+    #p01.invert_xaxis()
+#    p01.set_xlim([dt.date(year_ago), dt.date(date_now_notime)])
+    plt.savefig(basic_output_plt)
 
 quit()
 # Generate output if intraday_basic_analysis exists
@@ -102,57 +151,11 @@ quit()
 
 ## OLD CODE BELOW HERE ###
 
-
-# Check that inputs exist -- consider moving as def to util.py
-if not os.path.isfile(ticker_input_daily):
-    most_recent_daily = "MISSING"
-    print("Missing input file:",ticker_input_daily)
-    print("\nExiting\n")
-    quit()
-else:
-    most_recent_daily = "AVAILABLE"
-    
-
-if not os.path.isfile(ticker_input_intraday):
-    most_recent_intraday = "MISSING"
-    print("Missing input file:",ticker_input_intraday)
-    print("\nExiting\n")
-    quit()
-else:
-    most_recent_intraday = "AVAILABLE"
-
-print("\nInput files exist:\n",ticker_input_daily,"\n",ticker_input_intraday,"\n")
-
-# Copy inputs to basic analysis files
-ticker_basicanal_daily = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_analysis.csv")
-ticker_basicanal_intraday = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_intraday_basic_analysis.csv")
-df_daily = pd.DataFrame()
-df_daily = pd.read_csv(ticker_basicanal_daily)
-
-
-
-
-
-
-
-
-quit()
-### 
-
 # Add plot RSI, close from code example, update x axis to date, scale according to time input
 # Or... All time plot plus last 1 year plot?
 
-###
-
-
 # Import additional libraries
-import matplotlib.pyplot as plt
-plt.style.use('classic')
 #%matplotlib inline
-import numpy as np
-import pandas as pd
-import seaborn as sns
-sns.set()
 
 # Print useful information
 print("Ticker symbol:", ticker)
