@@ -64,6 +64,7 @@ args = parser.parse_args()
 if args.verbose:
     print("Verbosity turned on")
 
+### NEED TO IMPROVE FILE HANDLING TO USE NEWEST AVAILABLE BASIC ANALYSES -- PRESENTLY LOOKS FOR TODAY ONLY
 # Parse inputs and set ticker to uppercase if lowercase was entered
 ticker = args.ticker.upper()
 ticker_datadir = os.path.join(datadir,ticker,"")
@@ -110,13 +111,13 @@ if os.path.isfile(daily_basic_analysis):
     #df_daily_1yr = df_daily.loc[(df_daily['Date'] >= year_ago) & (df_daily['Date'] <= date_now_notime)]
     #df_daily_1yr = df_daily.query("Date >= yag and Date < = date_now_notime")
     
-    fig, axs = plt.subplots(figsize=(8, 6))
-    axs.set(ylabel="Value ($)",xlabel="Date")
-    axs.plot(date, values)
-    plt.xlim(mag)
-    plt.ylim(175,275)
-    plt.xticks(rotation = 45)
-    plt.legend(values, loc='upper left')
+    #fig, axs = plt.subplots(figsize=(8, 6))
+    #axs.set(ylabel="Value ($)",xlabel="Date")
+    #axs.plot(date, values)
+    #plt.xlim(mag)
+    #plt.ylim(175,275)
+    #plt.xticks(rotation = 45)
+    #plt.legend(values, loc='upper left')
     #ax.plot(df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(figsize=(8,8)), df_daily[['Date']])
 #    axs[0, 0].plot(df_daily[['Open','Close','High','Low']].set_index('Date').plot(figsize=(8,8)), df_daily[['Date']])
 #    axs[0, 0].set_title('Axis [0, 0]')
@@ -130,11 +131,25 @@ if os.path.isfile(daily_basic_analysis):
     #for ax in axs.flat:
         #ax.set(xlabel='x-label', ylabel='y-label')
     
-    #p01 = df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(figsize=(8,8))
-    #p01 = plt.ylabel('Value ($)')
-    #p01 = plt.xlim(yag)
-    #p01.invert_xaxis()
+#    p01 = df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(figsize=(8,8))
+#    p01 = plt.ylabel('Value ($)')
+#    p01 = plt.xlim(yag)
+#    p01.invert_xaxis()
 #    p01.set_xlim([dt.date(year_ago), dt.date(date_now_notime)])
+#    plt.savefig(basic_output_plt)
+
+
+    fig, ax = plt.subplots(3, 1, figsize=(14, 8), sharex='col')
+    df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(ax=ax[0])
+    ax1 = df_daily[['Date','RSI_14']].set_index('Date').plot(ax=ax[1])
+    ax1.axhline(30, color="black")
+    ax1.axhline(70, color="black")
+    ax1.set_ylim(ymin=0, ymax=100)
+    df_daily[['Date','High','Low','SMA_10']].set_index('Date').plot(ax=ax[2])
+    
+    #df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(ax=ax[2])
+    #ax1 = df_daily[['Date','RSI_14']].set_index('Date').plot(ax=ax[3])
+
     plt.savefig(basic_output_plt)
 
 quit()
