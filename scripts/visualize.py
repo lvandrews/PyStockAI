@@ -101,10 +101,12 @@ if os.path.isfile(daily_basic_analysis):
     df_daily['Date'] = pd.to_datetime(df_daily['Date'], format='%Y-%m-%d')
     date = df_daily['Date']
     values = df_daily[['Open','Close','High','Low']]
+    df_daily_short = df_daily.iloc[0:21]
     #df_daily_1yr = df_daily[df_daily['Date'] > date_now_notime - pd.Timedelta('365')]
     #print(df_daily_1yr)
     basic_output_sns = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_visualization_sns.png")
     basic_output_plt = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_visualization_plt.png")
+    basic_output_plt_short = os.path.join(ticker_datadir,"",f"{ticker}_{date_now_notime}_daily_basic_visualization_plt_shortterm.png")
     #df1 = pd.DataFrame(df_daily, df_daily.index, ["Open", "Close", "High", "Low"])
     #ax = sns.scatterplot(data=df1)
     #p01 = df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(figsize=(8,8))
@@ -138,19 +140,39 @@ if os.path.isfile(daily_basic_analysis):
 #    p01.set_xlim([dt.date(year_ago), dt.date(date_now_notime)])
 #    plt.savefig(basic_output_plt)
 
-
+    # Long-term plot (all time)
     fig, ax = plt.subplots(3, 1, figsize=(14, 8), sharex='col')
-    df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(ax=ax[0])
-    ax1 = df_daily[['Date','RSI_14']].set_index('Date').plot(ax=ax[1])
-    ax1.axhline(30, color="black")
-    ax1.axhline(70, color="black")
+    #lt_plot_title = "Long-term data: {ticker}"
+    df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(ax=ax[0],).legend(bbox_to_anchor=(1, 1.001), loc='upper left', borderaxespad=0, fontsize=12)
+    fig.suptitle("Long-term data: " + ticker, fontsize=18)
+    fig.subplots_adjust(right=0.8,left=0.05)
+    ax1 = df_daily[['Date','RSI_14','STOCHRSIk_14_14_3_3','STOCHRSId_14_14_3_3']].set_index('Date').plot(ax=ax[1])
+    X = ax1.axhline(70, color="grey")
+    ax1.axhline(30, color="grey")
     ax1.set_ylim(ymin=0, ymax=100)
-    df_daily[['Date','High','Low','SMA_10']].set_index('Date').plot(ax=ax[2])
+    ax1.axhspan(70, 100, color = "red", alpha=0.1)
+    ax1.axhspan(0, 30, color = "green", alpha=0.1)
+    ax1.legend(bbox_to_anchor=(1, 1.001), loc='upper left', borderaxespad=0, fontsize=12)
+    df_daily[['Date','High','Low','SMA_10','EMA_10']].set_index('Date').plot(ax=ax[2]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
     
-    #df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(ax=ax[2])
-    #ax1 = df_daily[['Date','RSI_14']].set_index('Date').plot(ax=ax[3])
-
     plt.savefig(basic_output_plt)
+    
+    # Short-term plot (30 days)
+    fig, ax = plt.subplots(3, 1, figsize=(14, 8), sharex='col')
+    df_daily_short[['Date','Open','Close','High','Low']].set_index('Date').plot(ax=ax[0]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
+    fig.suptitle("30 day data: " + ticker, fontsize=18)
+    fig.subplots_adjust(right=0.8,left=0.05)
+    ax1 = df_daily_short[['Date','RSI_14','STOCHRSIk_14_14_3_3','STOCHRSId_14_14_3_3']].set_index('Date').plot(ax=ax[1])
+    ax1.axhline(70, color="grey")
+    ax1.axhline(30, color="grey")
+    ax1.legend(bbox_to_anchor=(1, 1.001), loc='upper left', borderaxespad=0, fontsize=12)
+    ax1.set_ylim(ymin=0, ymax=100)
+    ax1.axhspan(70, 100, color = "red", alpha=0.1)
+    ax1.axhspan(0, 30, color = "green", alpha=0.1)
+    df_daily_short[['Date','High','Low','SMA_10','EMA_10']].set_index('Date').plot(ax=ax[2]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
+
+    plt.savefig(basic_output_plt_short)
+
 
 quit()
 # Generate output if intraday_basic_analysis exists
