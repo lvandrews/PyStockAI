@@ -119,17 +119,49 @@ print("\nDaily data source:   ", daily_data_fname, "\nIntraday data source:", in
 #quit()
 # Custom Strategy definition
 CustomStrategy = ta.Strategy(
-    name="Momo and Volatility",
-    description="SMA 50,200, BBANDS, RSI, MACD and Volume SMA 20",
+    name="Custom Strategy",
+    description="SMA20,SMA200, BBANDS, RSI, MACD and Volume SMA 20",
     ta=[
-        {"kind": "sma", "length": 50},
-        {"kind": "sma", "length": 200},
+        {"kind": "sma", "length": 20},
+        {"kind": "sma", "length": 100},
+        {"kind": "ema", "length": 10},
         {"kind": "bbands", "length": 20},
         {"kind": "rsi"},
         {"kind": "macd", "fast": 8, "slow": 21},
         {"kind": "sma", "close": "volume", "length": 20, "prefix": "VOLUME"},
     ]
 )
+
+# Function to signal when to buy and sell an asset
+def buy_sell(signal):
+    sigPriceBuy = []
+    sigPriceSell = []
+    flag = -1
+    for i in range(0,len(signal)):
+        #if sma30 > sma100  then buy else sell
+            if signal['SMA30'][i] > signal['SMA100'][i]:
+                if flag != 1:
+                    sigPriceBuy.append(signal[ticker][i])
+                    sigPriceSell.append(np.nan)
+                    flag = 1
+                else:
+                    sigPriceBuy.append(np.nan)
+                    sigPriceSell.append(np.nan)
+                #print('Buy')
+            elif signal['SMA30'][i] < signal['SMA100'][i]:
+                if flag != 0:
+                    sigPriceSell.append(signal[ticker][i])
+                    sigPriceBuy.append(np.nan)
+                    flag = 0
+                else:
+                    sigPriceBuy.append(np.nan)
+                    sigPriceSell.append(np.nan)
+                #print('sell')
+            else: #Handling nan values
+                sigPriceBuy.append(np.nan)
+                sigPriceSell.append(np.nan)
+  
+    return (sigPriceBuy, sigPriceSell)
 
 # Create dataframes from inputs and add technical indicators, write to outputs
 # Daily
@@ -145,6 +177,9 @@ elif strategy == "custom":
 
 df_daily.ta.log_return(cumulative=True, append=True)
 df_daily.ta.percent_return(cumulative=True, append=True)
+df_daily['SMA10'] = df_daily['Close'].rolling(window=10, min_periods=0).mean()
+df_daily['SMA30'] = df_daily['Close'].rolling(window=30, min_periods=0).mean()
+df_daily['SMA150'] = df_daily['Close'].rolling(window=150, min_periods=0).mean()
 
 print(df_daily)
 

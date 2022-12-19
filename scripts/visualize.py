@@ -141,36 +141,40 @@ if os.path.isfile(daily_basic_analysis):
 #    plt.savefig(basic_output_plt)
 
     # Long-term plot (all time)
-    fig, ax = plt.subplots(3, 1, figsize=(14, 8), sharex='col')
+    fig, ax = plt.subplots(4, 1, figsize=(14, 18), sharex='col')
     #lt_plot_title = "Long-term data: {ticker}"
     df_daily[['Date','Open','Close','High','Low']].set_index('Date').plot(ax=ax[0],).legend(bbox_to_anchor=(1, 1.001), loc='upper left', borderaxespad=0, fontsize=12)
     fig.suptitle("Long-term data: " + ticker, fontsize=18)
     fig.subplots_adjust(right=0.8,left=0.05)
-    ax1 = df_daily[['Date','RSI_14','STOCHRSIk_14_14_3_3','STOCHRSId_14_14_3_3']].set_index('Date').plot(ax=ax[1])
+    ax1 = df_daily[['Date','RSI_14']].set_index('Date').plot(ax=ax[1])
+#    ax1 = df_daily[['Date','RSI_14','STOCHRSIk_14_14_3_3','STOCHRSId_14_14_3_3']].set_index('Date').plot(ax=ax[1])
     X = ax1.axhline(70, color="grey")
     ax1.axhline(30, color="grey")
     ax1.set_ylim(ymin=0, ymax=100)
     ax1.axhspan(70, 100, color = "red", alpha=0.1)
     ax1.axhspan(0, 30, color = "green", alpha=0.1)
     ax1.legend(bbox_to_anchor=(1, 1.001), loc='upper left', borderaxespad=0, fontsize=12)
-    df_daily[['Date','High','Low','SMA_10','EMA_10']].set_index('Date').plot(ax=ax[2]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
+    df_daily[['Date','High','Low','SMA10','SMA30','SMA150']].set_index('Date').plot(ax=ax[2]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
+    df_daily[['Date','OHLC4','BBU_5_2.0','BBL_5_2.0']].set_index('Date').plot(ax=ax[3]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
     
     plt.savefig(basic_output_plt)
     
     # Short-term plot (30 days)
-    fig, ax = plt.subplots(3, 1, figsize=(14, 8), sharex='col')
+    fig, ax = plt.subplots(4, 1, figsize=(14, 18), sharex='col')
     df_daily_short[['Date','Open','Close','High','Low']].set_index('Date').plot(ax=ax[0]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
     fig.suptitle("30 day data: " + ticker, fontsize=18)
     fig.subplots_adjust(right=0.8,left=0.05)
-    ax1 = df_daily_short[['Date','RSI_14','STOCHRSIk_14_14_3_3','STOCHRSId_14_14_3_3']].set_index('Date').plot(ax=ax[1])
+    ax1 = df_daily_short[['Date','RSI_14']].set_index('Date').plot(ax=ax[1])
+#    ax1 = df_daily_short[['Date','RSI_14','STOCHRSIk_14_14_3_3','STOCHRSId_14_14_3_3']].set_index('Date').plot(ax=ax[1])
     ax1.axhline(70, color="grey")
     ax1.axhline(30, color="grey")
     ax1.legend(bbox_to_anchor=(1, 1.001), loc='upper left', borderaxespad=0, fontsize=12)
     ax1.set_ylim(ymin=0, ymax=100)
     ax1.axhspan(70, 100, color = "red", alpha=0.1)
     ax1.axhspan(0, 30, color = "green", alpha=0.1)
-    df_daily_short[['Date','High','Low','SMA_10','EMA_10']].set_index('Date').plot(ax=ax[2]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
-
+    df_daily_short[['Date','High','Low','SMA10','SMA30','SMA150']].set_index('Date').plot(ax=ax[2]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
+    df_daily_short[['Date','Close','OHLC4','BBU_5_2.0','BBM_5_2.0','BBL_5_2.0']].set_index('Date').plot(ax=ax[3]).legend(bbox_to_anchor=(1.001, 1), loc='upper left', borderaxespad=0, fontsize=12)
+    
     plt.savefig(basic_output_plt_short)
 
 
