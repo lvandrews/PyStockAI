@@ -185,6 +185,10 @@ print(df_daily)
 
 df_daily.to_csv(daily_output)
 
+### REORT END
+print("\n  --- DONE ---\n")
+quit()
+
 # Intraday
 if len(lof_intraday) > 0:
     print("Processing intraday data...")
